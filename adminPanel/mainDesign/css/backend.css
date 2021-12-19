@@ -4,7 +4,10 @@ body {
     font-size: 16px;
 } 
 
-
+a{
+    color: white;
+    text-decoration: none;
+}
 /*End Main Rules*/
 
 
@@ -27,6 +30,81 @@ body {
 
 /*End Bootstrap Edit*/
 
+/*Start DashBorad Page*/
+.home-stats .stat{
+    padding: 20px;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px #ccc;
+} 
+
+.home-stats .stat a{
+    color: #fff;  
+    text-decoration: none;
+} 
+.home-stats .stat a:hover{
+    opacity: .9;
+    transition: 0.4s;
+} 
+@media (max-width:768px) {
+    .home-stats .st-members,
+    .home-stats .st-pending,
+    .home-stats .st-items{
+        margin-bottom:15px;
+    }
+}
+.home-stats .stat span{
+    display: block;
+    font-size: 60px;
+}
+
+.home-stats .st-members {
+    background-color: #00b894;
+}
+
+.home-stats .st-pending {
+    background-color: #ff7675;
+}
+
+.home-stats .st-items {
+    background-color: #6c5ce7;
+}
+
+.home-stats .st-comments {
+    background-color: #e17055;
+}
+
+.latest {
+    margin-top:30px;
+}
+
+@media (max-width:576px) {
+   .latest .card{
+        margin-bottom:15px;
+    }
+}
+
+.latest-users{
+    margin-bottom: 0;
+}
+
+.latest-users li{
+    padding: 8px;
+    overflow: hidden;
+}
+
+.latest-users li:nth-child(odd){
+    background-color: #EEE;
+}
+
+.latest-users li .btn-success , .latest-users li .btn-info{
+    padding: 3px 8px;
+    margin: 0 2px;
+    color: white;
+}
+/*End DashBoard Page*/
+
 /*Start Members Page*/
 
 h1{
@@ -36,8 +114,38 @@ h1{
     color: #666;
 }
 
+.main-table {
+    -webkit-box-shadow: 0 3px 10px #ccc;
+    -Moz-box-shadow: 0 3px 10px #ccc;
+    -ms-box-shadow: 0 3px 10px #ccc;
+    box-shadow: 0 3px 10px #ccc;
+}
+
+.main-table td{
+    background-color: #fff;
+    vertical-align: middle !important;
+}
+.main-table tr:first-child td{
+    background-color: #333;
+    color: #F4F4F4;
+}
+.main-table .btn {
+    padding: 3px 10px;
+    color: white;
+    
+}
+
+.main-table .activate{
+    margin-left: 5px;
+}
+.fa-close, .fa-edit{
+    font-size:13px;
+}
+
 /*End Members Page*/
 
-/* Start Edit Form in Members Page*/
-
-/* End Edit Form in Members Page*/
+/*Start Categories Page*/
+.last-radio{
+    margin-bottom: 10px;
+}
+/*End Categories Page*/

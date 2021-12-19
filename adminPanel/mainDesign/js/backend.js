@@ -20,4 +20,11 @@ $(function (){
     //     }
 
     // });
+
+    //Confirmation Message On Button(Delete)
+    $('.confirm').click(function () {
+        
+        return confirm('Are You Sure To Delete This User?');
+    });
+
 });

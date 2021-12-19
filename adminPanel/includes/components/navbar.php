@@ -1,19 +1,19 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="#"><?php echo lang('HOME_ADMIN') ?></a>
+    <a class="navbar-brand" href="dashboard.php"><?php echo lang('HOME_ADMIN') ?></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-app">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="nav-app">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#"><?php echo lang('CATEGORIRES') ?></a>
+          <a class="nav-link" href="categories.php"><?php echo lang('CATEGORIRES') ?></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"><?php echo lang('ITEMS') ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><?php echo lang('MEMBERS') ?></a>
+          <a class="nav-link" href="members.php"><?php echo lang('MEMBERS') ?></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"><?php echo lang('STATISTICS') ?></a>
