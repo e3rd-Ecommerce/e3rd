@@ -1,0 +1,352 @@
+
+
+
+/* start main rulez */
+body {
+    background-color: #F4F4F4;
+    font-size: 16px;
+    background-image: url("../images/swirls.jpg");
+} 
+
+
+
+
+/* end main rulez */
+
+
+
+
+
+/* start login fotm  */
+
+.login{
+    width: 300px;
+    margin: 100px auto;
+}
+
+.login input{
+    margin-bottom: 10px;
+}
+
+.login .form-control{
+    background-color: #eaeaea;
+}
+
+.login .btn{
+    background-color: #008dde;
+}
+
+.login h4 {
+    color: #888;
+}
+
+/* end login form  */
+
+/* start bootstrap edit  */
+
+.navbar{
+border-radius: 0;
+margin-bottom: 0;
+
+}
+.nav-color:hover{
+    background-color: #3498db;
+}
+
+.nav-color{
+    min-width: 10px;
+    padding: 0;
+    font-size: 1em;
+    border: none;
+    border-radius: 0;
+}
+
+
+.nav-color > li > a{
+    color: #3498db;
+    padding: 20px 25px;
+}
+
+/* end bootstrap */
+
+
+/*start dashborad page */
+.home-stats .stat{
+    padding: 20px;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 15px  ;
+    position: relative;
+    overflow: hidden;
+
+}
+.home-stats .stat i{
+    font-size: 80px;
+    position: absolute;
+    top: 35px;
+    left: 30px;
+
+}
+.home-stats .stat .info{
+    float: right;
+
+
+
+}
+
+
+.home-stats .stat a{
+    color: #fff;
+    text-decoration: none;
+
+    
+}
+.home-stats .stat a:hover{
+    text-decoration: none;
+}
+
+
+
+.home-stats .stat span{
+    display: block;
+    font-size: 60px;
+}
+
+.latest{
+    margin-top: 30px;
+}
+
+.latest .toggle-info{
+    color: #999;
+    cursor: pointer;
+
+}
+.latest .toggle-info:hover{
+    color: #444;
+    
+}
+
+.home-stats .st-members{
+    background-color:#3498db ;
+
+}
+
+.home-stats .st-pending{
+    background-color:#c0392b ;
+
+
+}
+
+.home-stats .st-items{
+    background-color:#d35400 ;
+
+
+}
+
+.home-stats .st-comments{
+    background-color:#8e44ad ;
+
+
+}
+
+.latest-users {
+    margin-bottom: 0;
+
+}
+.latest-users li{
+    padding: 10px  ;
+    overflow: hidden;
+}
+.latest-users li:nth-child(odd){
+    background-color: #eee;
+}
+
+.latest-users .btn-success ,
+.latest-users .btn-info,
+.latest-users .btn-danger{
+    padding: 2px 8px;
+
+    
+}
+.latest-users .btn-info{
+    margin-right: 5px;
+}
+
+.latest-users .btn-danger{
+    margin-right: 5px;
+}
+/*end dashborad page */
+
+
+
+/* start member page  */
+
+h1{
+    font-size: 50px;
+    margin: 40px 0 ;
+    font-weight: bold;
+    color: #666;
+}
+
+.main-table{
+
+    box-shadow: 0 3px 10px #ccc;
+
+}
+
+.main-table td{
+    background-color: #fff;
+    vertical-align: middle !important;
+    
+}
+.main-table tr:first-child td{ 
+    background-color: #333;
+    color: #fff;
+}
+
+.main-table .btn{
+    padding: 3px 10px;
+    
+}
+
+.activate{
+    margin-left: 5px;
+}
+
+
+/* end member page  */
+
+/* start category page */
+
+.okmmm .add-new-cat {
+    margin-bottom: 30px;
+    
+}
+
+.categories .option a{
+    color: #777;
+    text-decoration: none;
+
+}
+.categories .option span{
+    color: #777;
+    cursor: pointer;
+
+}
+.categories .option .active{
+    color: #f00;
+    /* font-weight: bold;  */
+    
+}
+
+.card-header{
+    color: #959595;
+    font-weight: bold;
+}
+
+.categories .card-body {
+    padding: 0;
+}
+
+.categories hr{
+    margin-top: 0;
+    margin-bottom: 0 ;
+}
+
+.categories .cat{
+    padding:  15px;
+    position: relative;
+    overflow: hidden;
+
+}
+.categories .cat:hover .hidden-buttons {
+    right: 10px;
+}
+.categories .cat:hover{
+    background-color: #eee;
+}
+
+
+.categories .cat .hidden-buttons a{
+    margin-right: 5px ;
+
+}
+
+.categories .cat .hidden-buttons {
+    -webkit-transition:all .5s ease-in-out;
+    -moz-transition:all .5s ease-in-out;
+    transition:all .5s ease-in-out;
+
+
+    position: absolute;
+    top: 15px;
+    right: -120px;
+
+}
+.categories .cat h5{
+    margin: 0 ;
+    color: #6a6a6a; 
+    font-weight: bold;
+    cursor: pointer;
+}
+.categories .cat .full-view p{
+    margin: 10px 0;
+    color: #707070;
+    
+}
+
+.categories .cat:last-of-type ~ hr {
+    display: none;
+}
+
+.categories .cat .visibility{
+    background-color: #d35400 ;
+    color: #fff;
+    padding: 4px 6px;
+    margin-right:6px ;
+    border-radius: 6px;
+
+
+} 
+.categories .cat .commenting{
+    background-color: #2c3e50  ;
+    color: #fff;
+    padding: 4px 6px;
+    margin-right:6px ;
+    border-radius: 6px;
+
+
+}
+.categories .cat .advertises{
+    background-color: #c0392b ;
+    color: #fff;
+    padding: 4px 6px;
+    margin-right:6px ;
+    border-radius: 6px;
+
+
+}
+
+
+.categories .add-category{
+    margin-top: 10px;
+    margin-bottom: 5px;  
+}
+.div{
+    position: relative;
+}
+
+.show-pass{
+    position: absolute;
+    font-size: 19px !important;
+    top: 10px;
+    left: 417px;
+}
+
+
+/* end category page */
+
+
+
+
+
