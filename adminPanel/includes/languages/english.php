@@ -11,7 +11,7 @@
             'MEMBERS'       => 'Members',
             'STATISTICS'    => 'Statistics',
             'LOGS'          => 'Logs',
-            '' => '',
+            'COMMENTS'      => 'Comments',
             '' => '',
             '' => '',
             '' => ''

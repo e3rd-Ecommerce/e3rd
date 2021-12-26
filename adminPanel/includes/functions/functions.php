@@ -22,13 +22,18 @@ function printTitle(){
  ** $theMsg = echo The  Message [Error | Success |Warining]
  ** Url = The Link You Want To redirect
  ** $seconds = Seconds Before Directing
+ ** $custom = For Custom redirect page not index & not previous
 */
 
-function redirectHome($theMsg, $url = null ,$seconds = 3){
+function redirectHome($theMsg, $url = null, $custom = null ,$seconds = 3){
 
-    if($url === null){
-
+    if($url === null && $custom == null){
         $url = 'index.php';
+    }elseif (isset($custom) && $url == null){
+
+        $url = $custom.'.php';
+        $link = 'Previous Page';
+
     } else {
 
         if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' ){
@@ -104,11 +109,17 @@ function countItems($item , $table){
 ** $limit = Number Of records To Get
 */
 
-function getLatest($select, $table, $order, $limit = 5){
+function getLatest($select, $table, $order, $limit = 5,$notAdmin = null){
 
     global $con;
 
-    $getStmt = $con->prepare("SELECT $select FROM $table ORDER BY $order DESC LIMIT $limit");
+    $query ='';
+
+    if(isset($notAdmin)){
+        $query = 'WHERE GroupID = 0';
+    }
+
+    $getStmt = $con->prepare("SELECT $select FROM $table $query ORDER BY $order DESC LIMIT $limit");
 
     $getStmt->execute();
 

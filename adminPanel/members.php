@@ -7,6 +7,8 @@
 ===================================================
 */
 
+    ob_start();
+
     session_start();
 
     $pageTitle = "Members" ;
@@ -27,7 +29,7 @@
                 $query = 'AND RegStatus = 0';
             }
             //Select All Users Except Admins
-            $stmt = $con->prepare("SELECT * FROM users WHERE GroupId != 1 $query");
+            $stmt = $con->prepare("SELECT * FROM users WHERE GroupId != 1 $query ORDER BY userID DESC");
 
             //execute The Statement
             $stmt->execute();
@@ -35,48 +37,55 @@
             //Assign To Varaible
             $rows = $stmt->fetchAll();
         
-        ?>
+            if(!empty($rows)){
 
-            <h1 class="text-center">Manage Members</h1>
-            <div class="container"> 
-                <div class="table-responsive">
-                    <table class="main-table text-center table table-bordered">
-                        <tr> 
-                            <td>#ID</td>
-                            <td>Username</td>
-                            <td>Email</td>
-                            <td>Full Name</td>
-                            <td>Registerd Date</td>
-                            <td>control</td>
-                        </tr> 
+                ?>
 
-                        <?php
-                            foreach($rows as $row){
-                                echo "<tr>";
-                                    echo "<td>". $row['userID'] . "</td>";
-                                    echo "<td>". $row['UserName'] . "</td>";
-                                    echo "<td>". $row['Email'] . "</td>";
-                                    echo "<td>". $row['FullName'] . "</td>";
-                                    echo "<td>".$row['regDate']."</td>";
-                                    echo "<td>
-                                            <a href='?do=Edit&userid=$row[userID]' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                            <a href='?do=Delete&userid=$row[userID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
-                                     
-                                            if ($row['RegStatus'] == 0){
-                                               echo "<a href='?do=Activate&userid=$row[userID]' class='btn btn-info activate'><i class='fas fa-thumbs-up'></i> Activate</a>";
+                <h1 class="text-center">Manage Members</h1>
+                <div class="container"> 
+                    <div class="table-responsive">
+                        <table class="main-table text-center table table-bordered">
+                            <tr> 
+                                <td>#ID</td>
+                                <td>Username</td>
+                                <td>Email</td>
+                                <td>Full Name</td>
+                                <td>Registerd Date</td>
+                                <td>control</td>
+                            </tr> 
 
-                                            }         
-                                   echo "</td>";
-                                echo "</tr>";
-                            }
-                        ?>
-                        
-                    </table>
+                            <?php
+                                foreach($rows as $row){
+                                    echo "<tr>";
+                                        echo "<td>". $row['userID'] . "</td>";
+                                        echo "<td>". $row['UserName'] . "</td>";
+                                        echo "<td>". $row['Email'] . "</td>";
+                                        echo "<td>". $row['FullName'] . "</td>";
+                                        echo "<td>".$row['regDate']."</td>";
+                                        echo "<td>
+                                                <a href='?do=Edit&userid=$row[userID]' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
+                                                <a href='?do=Delete&userid=$row[userID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+                                                if ($row['RegStatus'] == 0){
+                                                echo "<a href='?do=Activate&userid=$row[userID]' class='btn btn-info activate'><i class='fas fa-check'></i> Activate</a>";
+                                                }         
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            ?>
+                            
+                        </table>
+                    </div>
+                    <a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>
                 </div>
-                <a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>
-            </div>
-        
-       <?php }elseif ($do == 'Add'){ //Add Members Page ?>
+        <?php }else {
+
+                $theMsg='<div class="nice-message">Theres No Members To show here</div>';
+                echo '<div class="container mt-3 text-center">';
+                    echo $theMsg;
+                    echo '<a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>';
+                echo '</div>';
+        }
+         }elseif ($do == 'Add'){ //Add Members Page ?>
 
             
             <div class="container">
@@ -109,7 +118,7 @@
             
                 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-                    echo '<h1 class="text-center"> Update Member</h1>';
+                    echo '<h1 class="text-center"> Insert Member</h1>';
                     echo '<div class="container">';
 
                     //Get Vraiables Form The Form
@@ -155,7 +164,7 @@
                         //Check If User Exist In DataBase
                         $check = checkItem("UserName", "users", $user);
                         if($check == 1){
-                            $theMsg="<div class='alert alert-success'>Sorry This User Is Exist</div>";
+                            $theMsg="<div class='alert alert-danger'>Sorry This User Is Exist</div>";
                                 echo '<div class="container mt-3 text-center">';
                                     redirectHome($theMsg,'back');
                                 echo '</div>';
@@ -176,7 +185,7 @@
                                 //echo Success Message
                                $theMsg="<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Inserted </div>';
                                 echo '<div class="container mt-3 text-center">';
-                                    redirectHome($theMsg,'back');
+                                    redirectHome($theMsg,null,'members');
                                 echo '</div>';
                         }
                     }
@@ -185,7 +194,7 @@
 
                     $theMsg = "<div class='alert alert-danger'>You cant Browse This Page Directly</div>" ;
                     echo '<div class="container mt-3 text-center">';
-                        redirectHome($theMsg,'back',4);
+                        redirectHome($theMsg,4);
                     echo '</div>';
                 }
             echo '</div>';
@@ -287,15 +296,44 @@
                     }
                     //Check if there is No Error Procees The Update Opertion
                     if(empty($formErrors)){
-                        //Update The DataBase With This Info
-                        $stmt = $con->prepare("UPDATE users SET UserName = ? , Email = ? , FullName = ?, Password = ? WHERE userID = ?");
-                        $stmt->execute(array($user,$email,$name,$pass,$id));
 
-                        //echo Success Message
-                        $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
-                        echo '<div class="container mt-3 text-center">';
-                            redirectHome($theMsg,'back',4);
-                        echo '</div>';
+
+                        $stmt2 =  $con->prepare("SELECT *
+                                                 FROM 
+                                                    users
+                                                  WHERE 
+                                                    UserName = ?
+                                                  AND 
+                                                    userID != ?"); //يعني جيبلي كل السوامح اللي بالداتابيز باستثناء هذا السامح
+                        
+                        $stmt2->execute(array($user,$id));
+
+                        $rows = $stmt2->rowCount();
+
+                         if($rows == 1){
+
+                         
+                            //echo Success Message
+                            $theMsg= "<div class='alert alert-danger'>Sorry This Username Is Exist </div>";
+                            echo '<div class="container mt-3 text-center">';
+                                redirectHome($theMsg,'back',4);
+                            echo '</div>';
+                            
+                         } else {
+
+                            
+                            //Update The DataBase With This Info
+                            $stmt = $con->prepare("UPDATE users SET UserName = ? , Email = ? , FullName = ?, Password = ? WHERE userID = ?");
+                            $stmt->execute(array($user,$email,$name,$pass,$id));
+
+                            //echo Success Message
+                            $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
+                            echo '<div class="container mt-3 text-center">';
+                                redirectHome($theMsg,'back',4);
+                            echo '</div>';
+
+                            
+                        }
                     }
 
                 } else {
@@ -335,7 +373,7 @@
                 }else {
                     $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
                         echo '<div class="container mt-3 text-center">';
-                            redirectHome($theMsg,4);
+                            redirectHome($theMsg,'back',4);
                         echo '</div>';
                 }
             echo '</div>';
@@ -381,3 +419,7 @@
             header('location:index.php');
             exit();
         }   
+
+ob_end_flush();
+
+?>

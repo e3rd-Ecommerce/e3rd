@@ -9,7 +9,7 @@ ob_start(); //Output Buffering Start
 
 session_start();
 
-$pageTitel = '';
+$pageTitle = '';
 
 if(isset($_SESSION['Username'])){
 

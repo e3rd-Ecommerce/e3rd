@@ -5,23 +5,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="nav-app">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav" >
         <li class="nav-item">
           <a class="nav-link" href="categories.php"><?php echo lang('CATEGORIRES') ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><?php echo lang('ITEMS') ?></a>
+          <a class="nav-link" href="items.php"><?php echo lang('ITEMS') ?></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="members.php"><?php echo lang('MEMBERS') ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><?php echo lang('STATISTICS') ?></a>
+          <a class="nav-link" href="comments.php"><?php echo lang('COMMENTS') ?></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><?php echo lang('LOGS') ?></a>
-        </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown float-end">
           <a class="nav-link dropdown-toggle" href="#" id="navMenu" role="button" data-bs-toggle="dropdown">
             Mahmood
           </a>
