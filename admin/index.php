@@ -6,8 +6,6 @@ $NOnavbar= '';
 $pageTitle = "login"; 
 
 
-
-
 // اذا كنت مسجل يفوت على طول من غير تسجيل دخول 
 if (isset($_SESSION['username'])) { 
     header('Location: dashbord.php')  ; 
@@ -22,10 +20,8 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     $username = $_POST['user'];
     $password = $_POST['pass'];
     $hashedpass =sha1($password); // تشفير الباس للحماية 
-    
 
     //  if the user exist in database
-
     $stmt = $con->prepare("SELECT
                                 userid,username,password  
                             FROM 
@@ -41,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
         $stmt->execute(array($username, $hashedpass));
         $row = $stmt->fetch(); // جلب البيانات  
         $count=$stmt->rowCount(); 
-        
+
 
         if ($count > 0 ) {
 
@@ -50,9 +46,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
             header('Location: dashbord.php') ; 
             exit(); 
         }
-
 }
-
 ?>
 
 

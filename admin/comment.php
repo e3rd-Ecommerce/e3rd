@@ -135,8 +135,9 @@ if (isset($_SESSION['username'])) {
                 
                 if( $count > 0 ) { ?>
 
-                <h1 class="text-center"><?php echo lang('Edit-comment') ; ?></h1> 
-                <div class="container">
+                <div class="container adddd">
+                <h1 class="mb-4"><?php echo lang('Edit-comment') ; ?></h1> <hr>
+
                     <form action="?do=update" class="" method="POST">
                         <!-- اليوزر اي دي الي رح اختارو واحدث من خلالو عن الاي دي  -->
                         <input type="hidden" name="comid" value="<?php echo $comid ?>" >

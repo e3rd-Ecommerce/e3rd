@@ -254,14 +254,18 @@ margin-bottom: 0;
 
 /* start member page  */
 
-h1{
+/* h1{
     font-size: 50px;
     margin: 40px 0 ;
     font-weight: bold;
     color: #666;
+} */
+
+.adddd{
+    max-width: 50%;
+    max-width: 50%;
+    margin-top: 130px;
 }
-
-
 
 .scrooll{
     margin-top: 150px;
@@ -359,7 +363,7 @@ h1{
 }
 
 .categories .cat .visibility{
-    background-color: #d35400 ;
+    background-color: #2c3e50  ;
     color: #fff;
     padding: 4px 6px;
     margin-right:6px ;
@@ -377,7 +381,7 @@ h1{
 
 }
 .categories .cat .advertises{
-    background-color: #c0392b ;
+    background-color: #2c3e50  ;
     color: #fff;
     padding: 4px 6px;
     margin-right:6px ;
@@ -402,7 +406,7 @@ h1{
     margin: 15px 0 10px;
     font-weight: bold;
     font-size: 16px;
-    color: #22ab79;
+    color: #f5f5f5ad;
 }
 .categories  .child-cats li{
     margin-left: 15px;  

@@ -112,14 +112,15 @@ if (isset($_SESSION['username'])) {
 
 
             elseif($do == 'add') {  //add new members  ?>
+                
+                <div class="container adddd">
+                <h1 class="">Add Members</h1> <hr>
 
-                <h1 class="text-center"><?php echo lang('add-members') ; ?></h1> 
-                <div class="container">
                     <form action="?do=insert" class="" method="POST">
 
                         <!-- start username field -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('username') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('username') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="text" name="username" class="form-control"  autocomplete="off" required="required" placeholder="username to login into shop"/>
                             </div>
@@ -128,7 +129,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start password field -->
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('password') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('password') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="password" name="password" class="form-control"  autocomplete="new-password" required="required" placeholder="password must be hard"/>
                                 <i class="bi bi-eye"></i>
@@ -138,7 +139,7 @@ if (isset($_SESSION['username'])) {
 
                             <!-- start email field -->
                             <div class=" row mb-3">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('email') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('email') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="email" name="email"  class="form-control" required="required" placeholder="email must be valid"  />
                             </div>
@@ -147,7 +148,7 @@ if (isset($_SESSION['username'])) {
 
                             <!-- start full name field -->
                             <div class="row mb-3 ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"> <?php echo lang('full-name') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"> <?php echo lang('full-name') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="text" name="fullname"  class="form-control" placeholder="full name appear in your profile page" />
                             </div>
@@ -157,13 +158,14 @@ if (isset($_SESSION['username'])) {
                         <!-- start save btn field -->
                         <div class="mt-3">
                             <div class="col-sm-offset-2 col-sm-10 "> 
-                                <input type="submit" value="add member" class="btn btn-info " />
+                                <input type="submit" value="add member" class="btn btn-info"  />
                             </div>
                         </div>
                         <!-- end save btn -->
                         
                     </form>
                 </div>
+            
 
             <?php
             
@@ -282,8 +284,9 @@ if (isset($_SESSION['username'])) {
                 
                 if( $count > 0 ) { ?>
 
-                <h1 class="text-center"><?php echo lang('Edit-members') ; ?></h1> 
-                <div class="container">
+                <div class="container adddd">
+                <h1 class="">Edit Members</h1> <hr>
+
                     <form action="?do=update" class="" method="POST">
                         <!-- اليوزر اي دي الي رح اختارو واحدث من خلالو عن الاي دي  -->
                         <input type="hidden" name="userid" value="<?php echo $userid ?>" >

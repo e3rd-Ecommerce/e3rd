@@ -1,4 +1,7 @@
+<?php 
 
+
+?>
 <!--  ناف بار الشمال -->
 
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -15,7 +18,7 @@
                 <span class="count bg-success"></span>
                 </div>
                     <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal">yazan</h5> 
+                        <h5 class="mb-0 font-weight-normal"> <?php echo $_SESSION['username']; ?> </h5> 
                         <span>Admin</span>
                     </div>
                 </div>
@@ -146,7 +149,7 @@
     <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
     <div class="navbar-profile">
         <img class="img-xs rounded-circle" src="layout/assets/images/faces/face15.jpg" alt="">
-        <p class="mb-0 d-none d-sm-block navbar-profile-name">yazan khreshe</p>
+        <p class="mb-0 d-none d-sm-block navbar-profile-name"><?php echo $_SESSION['username']; ?> </p>
         <i class="mdi mdi-menu-down d-none d-sm-block"></i>
     </div>
     </a>

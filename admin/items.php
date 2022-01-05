@@ -110,13 +110,14 @@ if (isset($_SESSION['username'])) {
 <?php
     } elseif ($do == 'add') {    ?>
 
-        <h1 class="text-center"><?php echo lang('add-new-item') ; ?></h1> 
-                <div class="container okmmm">
+                <div class="container adddd">
+                <h1 class=""><?php echo lang('add-new-item') ; ?></h1> <hr>
+
                     <form action="?do=insert" class="" method="POST">
 
                         <!-- start name field -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('name-catgory') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('name-catgory') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input 
                                 type="text"
@@ -129,7 +130,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start description items -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('description-item') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('description-item') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input
                                 type="text" 
@@ -142,7 +143,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start price items -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('price-item') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('price-item') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input
                                 type="text" 
@@ -155,7 +156,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start country items -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('countryy-item') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('countryy-item') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input
                                 type="text" 
@@ -168,7 +169,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start status items -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('status-item') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('status-item') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <select name="status" id="" class="">
                                     <option value="0"></option>
@@ -183,7 +184,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start member field -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('member-item') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('member-item') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <select name="member" id="" class="">
                                     <option value="0"></option>
@@ -205,7 +206,7 @@ if (isset($_SESSION['username'])) {
 
                         <!-- start category field -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('category-filed') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('category-filed') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <select name="category" id="" class="">
                                     <option value="0"></option>
@@ -355,13 +356,15 @@ if (isset($_SESSION['username'])) {
 
                 
             <!-- <div class="container okmmm"> -->
-            <div class="container-scroller scrooll">
+            <div class="container adddd">
+                
                 <form action="?do=update" class="mt-7" method="POST">
+                <h1>Edit item</h1><hr>
                 <input type="hidden" name="itemid" value="<?php echo $itemid ?>" >
 
                 <!-- start name field -->
                 <div class="row mb-3">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('name-catgory') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('name-catgory') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <input 
                         type="text"
@@ -375,7 +378,7 @@ if (isset($_SESSION['username'])) {
                 <!-- end name -->
                 <!-- start description items -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('description-item') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('description-item') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <input
                         type="text" 
@@ -389,7 +392,7 @@ if (isset($_SESSION['username'])) {
                 <!-- end description -->
                 <!-- start price items -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('price-item') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('price-item') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <input
                         type="text" 
@@ -403,7 +406,7 @@ if (isset($_SESSION['username'])) {
                 <!-- end price -->
                 <!-- start country items -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('countryy-item') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('countryy-item') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <input
                         type="text" 
@@ -416,7 +419,7 @@ if (isset($_SESSION['username'])) {
                 <!-- end country -->
                 <!-- start status items -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('status-item') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('status-item') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <select name="status" id="" class="">
                             <option value="0"></option>
@@ -430,7 +433,7 @@ if (isset($_SESSION['username'])) {
                 <!-- end status -->
                 <!-- start member field -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('member-item') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('member-item') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <select name="member" id="" class="">
                             <option value="0"></option>
@@ -452,7 +455,7 @@ if (isset($_SESSION['username'])) {
 
                 <!-- start category field -->
                 <div class=" row mb-3  ">
-                    <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('category-filed') ; ?></label>
+                    <label class="col-sm-2 col-lg-2 col-form-label"><?php echo lang('category-filed') ; ?></label>
                     <div class="col-sm-10 col-md-4"> 
                         <select name="category" id="" class="">
                             <option value="0"></option>

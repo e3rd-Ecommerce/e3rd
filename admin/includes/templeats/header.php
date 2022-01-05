@@ -31,7 +31,9 @@
     <!-- Layout styles -->
     <link rel="stylesheet" href="<?php echo $cssandjs; ?>css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="<?php echo $cssandjs; ?>images/favicon.png" />
+    <!-- بنحطط فوق صوره عنوان الصفحة  -->
+    
+    <!-- <link rel="shortcut icon" href="<?php echo $cssandjs; ?>images/favicon.png" /> -->
 
 
 
