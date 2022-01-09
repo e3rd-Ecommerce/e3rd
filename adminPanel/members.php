@@ -44,9 +44,10 @@
                 <h1 class="text-center">Manage Members</h1>
                 <div class="container"> 
                     <div class="table-responsive">
-                        <table class="main-table text-center table table-bordered">
+                        <table class="main-table text-center table table-bordered manage-members">
                             <tr> 
                                 <td>#ID</td>
+                                <td>Avatar</td>
                                 <td>Username</td>
                                 <td>Email</td>
                                 <td>Full Name</td>
@@ -58,6 +59,10 @@
                                 foreach($rows as $row){
                                     echo "<tr>";
                                         echo "<td>". $row['userID'] . "</td>";
+                                        echo "<td><img src='";
+                                                if(!empty($row['avatar'])){echo "uploads/avatars/". $row['avatar'];}
+                                                else{echo "uploads/avatars/no_avatar.png";}
+                                        echo "' alt='Avatar here'/></td>";
                                         echo "<td>". $row['UserName'] . "</td>";
                                         echo "<td>". $row['Email'] . "</td>";
                                         echo "<td>". $row['FullName'] . "</td>";
@@ -85,7 +90,7 @@
                     echo '<a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>';
                 echo '</div>';
         }
-         }elseif ($do == 'Add'){ //Add Members Page ?>
+        }elseif ($do == 'Add'){ //Add Members Page ?>
 
             
             <div class="container">
@@ -97,12 +102,23 @@
                                     </div>
 
                                     <div class="card-body">
-                                        <form action="?do=Insert" method="POST">
+                                        <!--نوع الانكربشن هذا بستخدمه لما بدي ارفع ملفات/صور... الخ وفي النوع الديفولت اللي هو application/x-www-form-urlencoded/-->
+                                        <form action="?do=Insert" method="POST" enctype='multipart/form-data'>
                                             <input type="text" name="username" placeholder="Username To Login into shop" class="form-control my-2" autocomplete="off" required="required" >
                                             <input type="password" name="password" class="form-control my-2" autocomplete="new-password" placeholder="Enter User Password" required="required">
                                             <input type="email" name="email" placeholder="Email Must Be Valid" class="form-control my-2" autocomplete="new-password" required="required" >
                                             <input type="text" name="full" placeholder="Full Name Appear In Your Profile Page" class="form-control my-2" required="required">
-                                            <button class="btn btn-success" >Add Member</button>
+                                            <!--Start User profile picture-->
+                                            <div class="custom-container">
+                                                <div class="button-wrap">
+                                                    <label class="button mb-3" for="upload">Upload File</label>
+                                                    <input id="upload" type="file" name="avatar" required="required">
+                                                </div>
+                                            </div>
+                                            <!--End User Profile Picture-->
+                                            <div class="d-grid col-12">
+                                                <button class="btn btn-success" type="submit">Add Member</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -120,6 +136,20 @@
 
                     echo '<h1 class="text-center"> Insert Member</h1>';
                     echo '<div class="container">';
+
+                    //Uploade Variables
+                    $avatar = $_FILES['avatar'];
+
+                    $avatarName     = $avatar['name']; //File name with extension
+                    $avatarSize     = $avatar['size']; //File Size in KiloByte
+                    $avatarTmpName  = $avatar['tmp_name']; //is the temporary name of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
+                    $avatarType     = $avatar['type']; //File type [img/pdf/powerpoint and so on..]
+                    
+                    $avatarAllowedExtensions = array("jpeg","jpg","png","gif","jfif"); //امتداد الملفات(الصور اللي بدي اسمع للشخص يرفعها)
+                    
+                    //Get allowd Avatar Extension to check if the file from allowd extensions or not
+                    $exploaded = explode('.', $avatarName);
+                    $avatarExtension = strtolower(end($exploaded));
 
                     //Get Vraiables Form The Form
                     $user = $_POST['username'];
@@ -152,6 +182,16 @@
                     if(empty($email)){
                         $formErrors[]= "email cant bet empty</div>";
                     }
+                    if(!empty($avatarName) && !in_array($avatarExtension,$avatarAllowedExtensions)){
+                        $formErrors[]="This Extension Is not <strong>Allowed</strong>";
+                    }
+                    if(empty($avatarName)){
+                        $formErrors[]="Avatar is <strong>Required</strong>";
+                    }
+
+                    if($avatarSize > 4194304){ //in byte
+                        $formErrors[]="Avatar Cant be Larger than <strong>4 Megabyte</strong>";
+                    }
 
                     //Print All Errors
                     foreach($formErrors as $error){
@@ -160,6 +200,9 @@
 
                     //Check if there is No Error Procees The Update Opertion
                     if(empty($formErrors)){
+
+                        $avatar = rand(0,1000000) . "_" . $avatarName;
+                        move_uploaded_file($avatarTmpName,"uploads\avatars\\" . $avatar); 
 
                         //Check If User Exist In DataBase
                         $check = checkItem("UserName", "users", $user);
@@ -171,15 +214,16 @@
                         } else {
                                 //inser User Info in DataBase
                                 $stmt = $con->prepare("INSERT INTO 
-                                                        users(UserName,Password,Email,FullName, RegStatus,regDate)
-                                                        VALUES(:zuser, :zpass, :zmail, :zname, 1, now())");
+                                                        users(UserName,Password,Email,FullName, RegStatus,regDate,avatar)
+                                                        VALUES(:zuser, :zpass, :zmail, :zname, 1, now(),:zavatar)");
 
                                 $stmt->execute(array(
                                 
-                                'zuser' => $user,
-                                'zpass' => $hasehdPass,
-                                'zmail' => $email,
-                                'zname' => $name
+                                'zuser'     => $user,
+                                'zpass'     => $hasehdPass,
+                                'zmail'     => $email,
+                                'zname'     => $name,
+                                'zavatar'   => $avatar
                                 ));
 
                                 //echo Success Message

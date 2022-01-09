@@ -1,5 +1,26 @@
  <?php
 
+
+/*
+** Get All Records Function v2.0
+** Function To Get All Records From any DataBase table
+*/
+
+function getAllFrom($field, $table, $where = NULL, $and = NULL ,$orderfield, $ordering = "DESC"){
+
+    global $con;
+
+    $getAll = $con->prepare("SELECT $field FROM $table $where $and ORDER BY $orderfield $ordering");
+
+    $getAll->execute();
+
+    $records = $getAll->fetchAll();
+
+    return $records;
+
+}
+
+
 /*
     **Title Function That Echo The Page Title In Case The Page
     ** Has The Variable $pageTitle And Echo Default Title For Other Page

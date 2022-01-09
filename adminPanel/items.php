@@ -32,7 +32,8 @@ if(isset($_SESSION['Username'])){
                                          users 
                                    ON 
                                         users.userID = items.member_ID
-                                   ORDER BY item_ID DESC 
+                                   ORDER BY 
+                                        item_ID DESC 
                                     ");
 
             //execute The Statement
@@ -149,13 +150,11 @@ if(isset($_SESSION['Username'])){
                                             <select name="member" class="mb-2" id="status">
                                                 <option value="0">...</option>
                                                 <?php 
-                                                    $stmt = $con->prepare("SELECT * FROM users");
-                                                    $stmt->execute();
-                                                    $users = $stmt->fetchAll();
-
+                                                    $users = getAllFrom("*", "users", "","" ,"userID");
                                                     foreach($users as $user){
 
-                                                        echo "<option value='".$user['userID']."'>". $user['UserName']. "</option>";                                                }
+                                                        echo "<option value='".$user['userID']."'>". $user['UserName']. "</option>";
+                                                    }
                                                 ?>
                                             </select>
                                         </div>
@@ -165,16 +164,29 @@ if(isset($_SESSION['Username'])){
                                             <select name="category" class="mb-2" id="status">
                                                 <option value="0">...</option>
                                                 <?php 
-                                                    $stmt2 = $con->prepare("SELECT * FROM categories");
-                                                    $stmt2->execute();
-                                                    $cats = $stmt2->fetchAll();
-
+                                                    $cats = getAllFrom("*", "categories", "WHERE parent = 0","" ,"ID");
                                                     foreach($cats as $cat){
-
-                                                        echo "<option value='".$cat['ID']."'>". $cat['name']. "</option>";                                                }
+                                                        echo "<option value='".$cat['ID']."'>". $cat['name']. "</option>";   
+                                                        $childCats = getAllFrom("*", "categories", "WHERE parent = {$cat['ID']}","" ,"ID");
+                                                        foreach($childCats as $child){
+                                                            echo '<optgroup label="Sub categories">';
+                                                                echo "<option class='ms-3' value='".$child['ID']."'>". '- '.$child['name']. "</option>";
+                                                            echo '</optgroup>';
+                                                         }
+                                                    }
                                                 ?>
                                             </select>
                                         </div>
+
+                                        <!--Start Tags Feild-->
+                                        <input 
+                                            type="text" 
+                                            name="tags" 
+                                            placeholder="food, games, kids, lashes" 
+                                            class="form-control my-2" 
+                                            > 
+                                        <!--End Tags Feild-->
+
                                         <button class="btn btn-success btn-sm" >Add Item</button>
                                     </form>
                                 </div>
@@ -194,13 +206,14 @@ if(isset($_SESSION['Username'])){
                 echo '<div class="container">';
 
                     //Get Vraiables Form The Form
-                    $name = $_POST['name'];
-                    $desc = $_POST['description'];
-                    $price = $_POST['price'];
-                    $country = $_POST['country'];
-                    $status = $_POST['status'];
-                    $member = $_POST['member'];
-                    $cat = $_POST['category'];
+                    $name       = $_POST['name'];
+                    $desc       = $_POST['description'];
+                    $price      = $_POST['price'];
+                    $country    = $_POST['country'];
+                    $status     = $_POST['status'];
+                    $member     = $_POST['member'];
+                    $cat        = $_POST['category'];
+                    $tags       = $_POST['tags'];
 
                 
                 //Validate The Form
@@ -240,8 +253,8 @@ if(isset($_SESSION['Username'])){
 
                             //inser User Info in DataBase
                             $stmt = $con->prepare("INSERT INTO 
-                                                    items(name,description,price,country_made,added_date, status, approve, cat_ID, member_ID)
-                                                    VALUES(:zname, :zdesc, :zprice, :zcountry, now(), :zstatus, 1, :zcat, :zmember)");
+                                                    items(name,description,price,country_made,added_date, status, approve, cat_ID, member_ID, tags)
+                                                    VALUES(:zname, :zdesc, :zprice, :zcountry, now(), :zstatus, 1, :zcat, :zmember, :ztags)");
 
                             $stmt->execute(array(
                             
@@ -251,7 +264,8 @@ if(isset($_SESSION['Username'])){
                                 'zcountry'  => $country,
                                 'zstatus'   =>$status,
                                 'zcat'      => $cat,
-                                'zmember'   => $member
+                                'zmember'   => $member,
+                                'ztags'     => $tags
                             ));
 
                             //echo Success Message
@@ -350,10 +364,7 @@ if(isset($_SESSION['Username'])){
                                             <label for="member">Select Member: </label>
                                             <select name="member" class="mb-2" id="member">
                                                 <?php 
-                                                    $stmt = $con->prepare("SELECT * FROM users");
-                                                    $stmt->execute();
-                                                    $users = $stmt->fetchAll();
-
+                                                    $users = getAllFrom("*", "users", "","" ,"userID");
                                                     foreach($users as $user){
 
                                                         echo "<option value='".$user['userID']."'";
@@ -367,17 +378,35 @@ if(isset($_SESSION['Username'])){
                                             <label for="status">Select Category: </label>
                                             <select name="category" class="mb-2" id="status">
                                                 <?php 
-                                                    $stmt2 = $con->prepare("SELECT * FROM categories");
-                                                    $stmt2->execute();
-                                                    $cats = $stmt2->fetchAll();
-
+                                                    $cats = getAllFrom("*", "categories", "WHERE parent = 0","" ,"ID");
                                                     foreach($cats as $cat){
-
                                                         echo "<option value='".$cat['ID']."'";
-                                                        if($item['cat_ID'] == $cat['ID']){echo 'selected';}
-                                                        echo ">". $cat['name']. "</option>";                                                }
+                                                            if($item['cat_ID'] == $cat['ID']){echo 'selected';}
+                                                        echo ">". $cat['name']. "</option>";   
+                                                        $childCats = getAllFrom("*", "categories", "WHERE parent = {$cat['ID']}","" ,"ID");
+                                                        foreach($childCats as $child){
+                                                            echo '<optgroup label="Sub categories">';
+                                                                echo "<option class='ms-3' value='".$child['ID']."'";
+                                                                    if($item['cat_ID'] == $child['ID']){echo 'selected';}
+                                                                echo ">". '- '.$child['name']. "</option>";
+                                                            echo '</optgroup>';
+                                                         }
+                                                    }
+
+                                                      
                                                 ?>
                                             </select>
+
+                                            <!--Start Tags Feild-->
+                                                <input 
+                                                    type="text" 
+                                                    name="tags" 
+                                                    placeholder="food, games, kids, lashes" 
+                                                    class="form-control my-2" 
+                                                    value = "<?php echo $item['tags']; ?>"
+                                                    > 
+                                             <!--End Tags Feild-->
+
                                         </div>
                                         <button class="btn btn-success btn-sm" >Save Item</button>
                                     </form>
@@ -389,16 +418,16 @@ if(isset($_SESSION['Username'])){
             <?php
             //Select All Comments For This itesm
             $stmt = $con->prepare("SELECT
-                                comments.*,
-                                users.UserName As member_name
-                            FROM 
-                                comments
-                            INNER JOIN 
-                                users 
-                            ON 
-                                users.userID = comments.user_ID
-                            WHERE
-                                item_ID = ?
+                                    comments.*,
+                                    users.UserName As member_name
+                                FROM 
+                                    comments
+                                INNER JOIN 
+                                    users 
+                                ON 
+                                    users.userID = comments.user_ID
+                                WHERE
+                                    item_ID = ?
                             ");
 
             //execute The Statement
@@ -467,6 +496,7 @@ if(isset($_SESSION['Username'])){
                 $status     = $_POST['status'];
                 $member     = $_POST['member'];
                 $category   = $_POST['category'];
+                $tags       = $_POST['tags'];
 
                 //Validate The Form
                 $formErrors = array(); //Array To coolect Al Errors
@@ -502,12 +532,13 @@ if(isset($_SESSION['Username'])){
                                                 country_made = ? ,
                                                 status       = ? ,
                                                 member_ID    = ? ,
-                                                cat_ID       = ? 
+                                                cat_ID       = ? ,
+                                                tags         = ? 
 
                                            WHERE
                                                 item_ID      = ?");
                                                 
-                    $stmt->execute(array($name,$desc,$price,$country,$status,$member,$category,$id));
+                    $stmt->execute(array($name,$desc,$price,$country,$status,$member,$category,$tags,$id));
 
                     //echo Success Message
                     $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';

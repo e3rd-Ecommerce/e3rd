@@ -31,13 +31,13 @@
                                LIMIT 1");
 
         $stmt->execute(array($username, $hashedPass));
-        $row = $stmt -> fetch();
+        $user = $stmt -> fetch();
         $count = $stmt->rowCount(); //هاي الرو كاونت فنكشن جاهزه بتجيبلي عدد الاسطر اللي لقاها 
         
         //If count > 0 this mean that the database Contain Record About This UserName
         if($count > 0 ){
             $_SESSION['Username'] = $username;
-            $_SESSION['ID'] = $row['userID'];
+            $_SESSION['ID'] = $user['userID'];
             header('location: dashboard.php');
             exit();
         }

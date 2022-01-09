@@ -28,52 +28,74 @@ if(isset($_SESSION['Username'])){
             $sort = $_GET['sort'];
         }
 
-        $stmt2 = $con->prepare("SELECT * FROM categories ORDER BY ordering $sort");
+        $stmt2 = $con->prepare("SELECT * FROM categories WHERE parent = 0 ORDER BY ordering $sort");
         $stmt2->execute();
-        $cats = $stmt2->fetchAll();//Cats => Categories ?>
+        $cats = $stmt2->fetchAll();//Cats => Categories 
 
-        <h1 class="text-center">Manage Categories</h1>
-        <div class="container categories">
-                    <a href="categories.php?do=Add" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> New Category</a>
-                    <div class="card" >
-                        <div class="card-header">
-                            <i class="fas fa-tools"></i> Manage Categories
-                            <div class="options float-end">
-                                <i class="fas fa-sort"></i> Ordering: [
-                                <a class="<?php if($sort == 'ASC'){echo 'active';}?>" href="?sort=ASC">Asc</a> |
-                                <a class="<?php if($sort == 'DESC'){echo 'active';}?>" href="?sort=DESC">Desc</a>]
-                                <i class="far fa-eye"></i> View:[
-                                <span class="active" data-view="full">Full</span> |
-                                <span data-view="classic">Classic</span>]
+
+            if(!empty($cats)){ 
+             ?>
+            <h1 class="text-center">Manage Categories</h1>
+            <div class="container categories">
+                        <a href="categories.php?do=Add" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> New Category</a>
+                        <div class="card" >
+                            <div class="card-header">
+                                <i class="fas fa-tools"></i> Manage Categories
+                                <div class="options float-end">
+                                    <i class="fas fa-sort"></i> Ordering: [
+                                    <a class="<?php if($sort == 'ASC'){echo 'active';}?>" href="?sort=ASC">Asc</a> |
+                                    <a class="<?php if($sort == 'DESC'){echo 'active';}?>" href="?sort=DESC">Desc</a>]
+                                    <i class="far fa-eye"></i> View:[
+                                    <span class="active" data-view="full">Full</span> |
+                                    <span data-view="classic">Classic</span>]
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <?php
+                                    foreach($cats as $cat){
+                                        echo "<div class='cat'>";
+                                            echo "<div class='hidden-buttons'>";
+                                                echo "<a href='categories.php?do=Edit&catid=".$cat['ID']."' class='btn btn-xs btn-primary'><i class='fa fa-edit'></i> Edit</a>";
+                                                echo "<a href='categories.php?do=Delete&catid=".$cat['ID']. "' class='confirm btn btn-xs btn-danger'><i class='fa fa-close'></i> Delete</a>";
+                                            echo "</div>";
+                                            echo "<h3>".$cat['name'] . "</h3>";
+                                            echo "<div class='full-view'>";
+                                                echo "<p class='text-muted'>"; 
+                                                    if($cat['description'] == ''){echo "No description For This Category";}
+                                                    else {echo $cat['description'];} 
+                                                echo "</p>";
+                                                if($cat ['visibility'] == 1){echo "<span class='visibility global-span'><i class='far fa-eye-slash'></i> Hidden</span>";}
+                                                if($cat ['allow_comment'] == 1){echo "<span class='commenting global-span'><i class='far fa-window-close'></i> Comments Disabled</span>";}
+                                                if($cat ['allow_ads'] == 1){echo "<span class='advertises global-span'><i class='fas fa-minus-circle'></i> Ads Disabled</span>";}
+                                            echo "</div>";
+                                            //Get Sub categories for every category
+                                            $childCats = getAllFrom("*", "categories" ,"WHERE parent = {$cat['ID']}", "", "ID", "ASC");
+                                            if(!empty($childCats)){
+                                                echo "<h4 class='child-head'>Sub Categories</h4>";
+                                                echo "<ul class='list-unstyled child-cats'>";
+                                                    foreach($childCats as $subCat){
+                                                        echo "<li class='child-link'>
+                                                                <a href='categories.php?do=Edit&catid=". $subCat['ID']."' >" . $subCat['name'] . "</a>
+                                                                <a href='categories.php?do=Delete&catid=".$subCat['ID']. "' class='confirm show-delete'><i class='far fa-trash-alt'></i></a>
+                                                             </li>";
+                                                    }
+                                                echo "</ul>";
+                                            }
+                                        echo "</div>";
+                                    echo "<hr>";
+                                    }
+                                ?>
                             </div>
                         </div>
-
-                        <div class="card-body">
-                            <?php
-                                foreach($cats as $cat){
-                                    echo "<div class='cat'>";
-                                        echo "<div class='hidden-buttons'>";
-                                            echo "<a href='categories.php?do=Edit&catid=".$cat['ID']."' class='btn btn-xs btn-primary'><i class='fa fa-edit'></i> Edit</a>";
-                                            echo "<a href='categories.php?do=Delete&catid=".$cat['ID']. "' class='confirm btn btn-xs btn-danger'><i class='fa fa-close'></i> Delete</a>";
-                                        echo "</div>";
-                                        echo "<h3>".$cat['name'] . "</h3>";
-                                        echo "<div class='full-view'>";
-                                            echo "<p class='text-muted'>"; 
-                                                if($cat['description'] == ''){echo "No description For This Category";}
-                                                else {echo $cat['description'];} 
-                                            echo "</p>";
-                                            if($cat ['visibility'] == 1){echo "<span class='visibility global-span'><i class='far fa-eye-slash'></i> Hidden</span>";}
-                                            if($cat ['allow_comment'] == 1){echo "<span class='commenting global-span'><i class='far fa-window-close'></i> Comments Disabled</span>";}
-                                            if($cat ['allow_ads'] == 1){echo "<span class='advertises global-span'><i class='fas fa-minus-circle'></i> Ads Disabled</span>";}
-                                        echo "</div>";
-                                    echo "</div>";
-                                    echo "<hr>";
-                                }
-                            ?>
-                        </div>
-                    </div>
-        </div>
-    <?php
+            </div>
+    <?php   } else {
+                $theMsg='<div class="nice-message">Theres No Categories To show here</div>';
+                echo '<div class="container mt-3 text-center">';
+                    echo $theMsg;
+                    echo '<a href="categories.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Category</a>';
+                echo '</div>';
+            }
 
     } elseif ($do == 'Add'){ ?>
 
@@ -90,6 +112,24 @@ if(isset($_SESSION['Username'])){
                                         <input type="text" name="name" placeholder="Enter category name" class="form-control my-2" autocomplete="off" required="required" >
                                         <input type="text" name="description" class="form-control my-2" placeholder="Descripe the category" >
                                         <input type="number" name="ordering" placeholder="Number to arrange the categories" class="form-control my-2">
+                                        
+                                        <!--Start Category Type-->
+                                        <div class="form-group form-group-lg my-2">
+                                            <label class="col-sm-2 control-label">Parent ?</label>
+                                            <div class="col-sm-12">
+                                                <select name="parent">
+                                                    <option value="0">None</option>
+                                                    <?php
+                                                        $allCats = getAllFrom("*", "categories", "WHERE parent = 0", "", "ID");
+                                                        foreach($allCats as $cat){
+                                                            echo "<option value='".$cat['ID']."'>".$cat['name']."</option>";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--End Category Type-->
+                                      
                                         <div>
                                             <input type="radio" name="visibility" value="0" checked />
                                             <label for="">Visible</label>
@@ -134,12 +174,13 @@ if(isset($_SESSION['Username'])){
                 echo '<div class="container">';
 
                 //Get Vraiables Form The Form
-                $name = $_POST['name'];
-                $desc = $_POST['description'];
-                $order = $_POST['ordering'];
-                $visible = $_POST['visibility'];
-                $comment = $_POST['commenting'];
-                $ads = $_POST['ads'];
+                $name       = $_POST['name'];
+                $desc       = $_POST['description'];
+                $parent     = $_POST['parent'];
+                $order      = $_POST['ordering'];
+                $visible    = $_POST['visibility'];
+                $comment    = $_POST['commenting'];
+                $ads        = $_POST['ads'];
                 
                 //Check If Category Exist In DataBase
                 $check = checkItem("name", "categories", $name);
@@ -152,13 +193,14 @@ if(isset($_SESSION['Username'])){
                 } else {
                         //inser Categories Info in DataBase
                         $stmt = $con->prepare("INSERT INTO 
-                                                categories(name,description,ordering,visibility, allow_comment,allow_ads)
-                                                VALUES(:zname, :zdesc, :zorder, :zvisible, :zcomment, :zads)");
+                                                categories(name,description,parent,ordering,visibility, allow_comment,allow_ads)
+                                                VALUES(:zname, :zdesc,:zparent, :zorder, :zvisible, :zcomment, :zads)");
 
                         $stmt->execute(array(
                             
                             'zname'     => $name,
                             'zdesc'     => $desc,
+                            'zparent'   => $parent,
                             'zorder'    => $order,
                             'zvisible'  => $visible,
                             'zcomment'  => $comment,
@@ -216,6 +258,26 @@ if(isset($_SESSION['Username'])){
                                         <input type="text" name="name" placeholder="Enter category name" class="form-control my-2" required="required" value="<?php echo $cat['name']; ?>" >
                                         <input type="text" name="description" class="form-control my-2" placeholder="Descripe the category" value="<?php echo $cat['description']; ?>">
                                         <input type="number" name="ordering" placeholder="Number to arrange the categories" class="form-control my-2" value="<?php echo $cat['ordering']; ?>">
+                                         
+                                        <!--Start Category Type-->
+                                         <div class="form-group form-group-lg my-2">
+                                            <label class="col-sm-2 control-label">Parent ?</label>
+                                            <div class="col-sm-12">
+                                                <select name="parent">
+                                                    <option value="0">None</option>
+                                                    <?php
+                                                        $allCats = getAllFrom("*", "categories", "WHERE parent = 0", "", "ID");
+                                                        foreach($allCats as $c){
+                                                            echo "<option value='".$c['ID']."'";
+                                                            if($cat['parent'] == $c['ID']) { echo 'selected'; }
+                                                            echo ">".$c['name']."</option>";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--End Category Type-->
+                                        
                                         <div>
                                             <input type="radio" name="visibility" value="0" <?php if($cat['visibility'] == 0){echo 'checked';} ?> />
                                             <label for="">Visible</label>
@@ -273,7 +335,7 @@ if(isset($_SESSION['Username'])){
                 $name       = $_POST['name'];
                 $desc       = $_POST['description'];
                 $order      = $_POST['ordering'];
-
+                $parent     = $_POST['parent'];
                 $visible    = $_POST['visibility'];
                 $comment    = $_POST['commenting'];
                 $ads        = $_POST['ads'];
@@ -288,18 +350,19 @@ if(isset($_SESSION['Username'])){
 
                     //Update The DataBase With This Info
                     $stmt = $con->prepare("UPDATE 
-                                            categories 
-                                       SET
-                                            name = ? , 
-                                            description = ?,
-                                            ordering = ?,
-                                            visibility = ?,
-                                            allow_comment = ?,
-                                            allow_ads = ? 
-                                        WHERE 
-                                            ID = ?");
+                                                categories 
+                                           SET
+                                                name = ? , 
+                                                description = ?,
+                                                parent = ?,
+                                                ordering = ?,
+                                                visibility = ?,
+                                                allow_comment = ?,
+                                                allow_ads = ? 
+                                           WHERE 
+                                                 ID = ?");
 
-                    $stmt->execute(array($name,$desc,$order,$visible,$comment,$ads,$id));
+                    $stmt->execute(array($name,$desc,$parent,$order,$visible,$comment,$ads,$id));
 
                     //echo Success Message
                     $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
