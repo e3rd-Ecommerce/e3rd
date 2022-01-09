@@ -6,8 +6,6 @@ $NOnavbar= '';
 $pageTitle = "login"; 
 
 
-
-
 // اذا كنت مسجل يفوت على طول من غير تسجيل دخول 
 if (isset($_SESSION['username'])) { 
     header('Location: dashbord.php')  ; 
@@ -22,10 +20,8 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     $username = $_POST['user'];
     $password = $_POST['pass'];
     $hashedpass =sha1($password); // تشفير الباس للحماية 
-    
 
     //  if the user exist in database
-
     $stmt = $con->prepare("SELECT
                                 userid,username,password  
                             FROM 
@@ -41,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
         $stmt->execute(array($username, $hashedpass));
         $row = $stmt->fetch(); // جلب البيانات  
         $count=$stmt->rowCount(); 
-        
+
 
         if ($count > 0 ) {
 
@@ -50,15 +46,13 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
             header('Location: dashbord.php') ; 
             exit(); 
         }
-
 }
-
 ?>
 
 
 <form action="<?php echo $_SERVER['PHP_SELF'] ;?>" class="login" method="POST">
     <h4 class="text-center" >admin login</h4>
-    <input class="form-control input-lg" type="text" name="user" placeholder="User Email" autocomplete="off">
+    <input class="form-control input-lg" type="text" name="user" placeholder="Username" autocomplete="off">
     <input class="form-control input-lg"  type="password" name="pass" placeholder="password" autocomplete="new-password">
     <input class="btn btn-primary input-lg"  type="submit" value="login">
 

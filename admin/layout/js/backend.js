@@ -1,8 +1,8 @@
-$(function (){
+$(function (){  
 
     'use strict';
 
-    // dashboard 
+    // dashboard
 
     $('.toggle-info').click(function(){
         $(this).toggleClass('selected').parent().next('.card-body').fadeToggle(100);
@@ -11,35 +11,31 @@ $(function (){
             $(this).html('<i class="fa fa-minus fa-lg"></i>');
         }else{
             $(this).html('<i class="fa fa-plus fa-lg"></i>');
-
         }
 
     });
 
 
-
-
     // trigger the selectboxit
     $("select").selectBoxIt
     ({
-        autoWidth: false  ,
+        autoWidth: false ,
 
         // Uses the jQuery 'fadeIn' effect when opening the drop down
-        showEffect: "fadeIn",
+        showEffect: "fadeIn" ,
     
         // Sets the jQuery 'fadeIn' effect speed to 400 milleseconds
-        showEffectSpeed: 400,
+        showEffectSpeed: 400 ,
     
         // Uses the jQuery 'fadeOut' effect when closing the drop down
-        hideEffect: "fadeOut",
+        hideEffect: "fadeOut" ,
     
         // Sets the jQuery 'fadeOut' effect speed to 400 milleseconds
         hideEffectSpeed: 400
     });
 
 
-
-    //Hide Plasce Holder on Form Focus
+    // Hide Plasce Holder on Form Focus
     $('[placeholder]').focus(function(){
 
         $(this).attr('data-text', $(this).attr('placeholder'));
@@ -49,7 +45,8 @@ $(function (){
         $(this).attr('placeholder',$(this).attr('data-text'));
     });
 
-    //Add Astrisk On Requierd Field
+
+    // Add Astrisk On Requierd Field
     // $('input').each(function() {
 
     //     if($(this).attr('required') === 'required'){
@@ -58,7 +55,7 @@ $(function (){
 
     // });
 
-    
+
     // رسالة تأكيد على الزر  
 
     $('.confirm').click(function (){
@@ -75,7 +72,7 @@ $(function (){
 
     });
 
-    
+
     $('.option span').click(function(){
         $(this).addClass('active').siblings('span').removeClass('active');
 
@@ -86,12 +83,20 @@ $(function (){
         }
     });
 
-    var pass = $('.password');
-    $('.show-pass').hover(function(){
-        pass.attr('type','text');
-    }, function(){
-        pass.attr('type','password');
+
+    // show delete button on child cats 
+
+    $('.child-link').hover(function(){
+
+        $(this).find('.show-delete').fadeIn(400) ;
+
+    }, function() {
+
+        $(this).find('.show-delete').fadeOut(400);
+
+
+
     });
-    
+
     
 });

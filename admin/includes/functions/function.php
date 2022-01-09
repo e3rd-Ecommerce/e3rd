@@ -1,4 +1,24 @@
 <?php 
+// get all function v2.0 
+// function to get all from any database table 
+
+function getallfrom($filed , $table , $where= null , $and = NULL ,$orderfiled  , $ordering = "DESC"  ){
+
+    global $con  ; 
+
+    // $$where = $where == null ? '' : $where ;  
+
+    $getall = $con->prepare("SELECT $filed FROM $table $where ORDER BY $orderfiled $and $ordering  ") ; 
+
+    $getall->execute(); 
+
+    $all = $getall->fetchAll(); 
+
+    return $all ; 
+
+}
+
+
 // v1.0
 // title function that echo the page title in case the page 
 // has the variable $pagetitle and echo defult title for other pages 
@@ -11,6 +31,8 @@ function getTitle(){
         echo 'default' ; 
     }
 }
+
+
 
 
 //home redirect function v2.0
@@ -50,6 +72,8 @@ function redircthome($theMsg ,$url = null ,  $seconds = 3 ){
 }
 
 
+
+
 // function to check item in database [function accept parameters]
 // $select = the item to select [ex : user , item , category ]
 //$from = the table to select form [ex: users , items , categories]
@@ -67,19 +91,23 @@ function checkitem($select,$from,$value){
 }
 
 
+
+
 // count number of items function v1.0
 // function to count number of item rows
 // $item = the item to count
 // $table= the table to choose from 
-function countItems($item , $table){
+function countItems($item , $table ){
 
     global $con ;
 
-    $stmt2 = $con->prepare("SELECT COUNT($item) FROM $table"); 
+    $stmt2 = $con->prepare("SELECT COUNT($item) FROM $table "); 
     $stmt2->execute();
 
     return $stmt2->fetchColumn() ; 
 }
+
+
 
 
 // get latest records function v1.0 
@@ -88,11 +116,11 @@ function countItems($item , $table){
 // $table = filed to table
 //$limit = number of record to get
 //$order = the desc ordering 
-function getlatest($select , $table , $order , $limit = 5 ){
+function getlatest($select , $table ,$where , $order , $limit = 5 ){
 
     global $con  ; 
 
-    $getstmt = $con->prepare("SELECT $select FROM $table ORDER BY $order DESC   LIMIT $limit ") ; 
+    $getstmt = $con->prepare("SELECT $select FROM $table $where ORDER BY $order DESC   LIMIT $limit ") ; 
     $getstmt->execute(); 
 
     $row = $getstmt->fetchAll(); 

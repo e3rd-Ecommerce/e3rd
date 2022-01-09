@@ -42,6 +42,7 @@ if (isset($_SESSION['username'])) {
                                         users
                                         ON
                                         users.userid= comment.user_id
+                                        ORDER BY c_id DESC
                                         ")  ;  
 
                 $stmt->execute(); 
@@ -51,11 +52,15 @@ if (isset($_SESSION['username'])) {
             
             
             ?>
+                        <div class="row mt-5">
+                        <div class="col-12 grid-margin">
+                        <div class="card">
+                        <div class="card-body"> 
+                        <h2 class="card-title mt-5 text-center text-muted">Manage Comment</h2>
+                        <div class="table-responsive">
+                        <table class="table">
+                        <thead>
 
-                <h1 class="text-center"><?php echo lang('comment-members') ; ?></h1> 
-                <div class="container">
-                    <div class="tabel-responsive">
-                        <table class="main-table text-center table table-bordered">
                             <tr>
                                 <td>id</td>
                                 <td>comment</td>
@@ -76,14 +81,14 @@ if (isset($_SESSION['username'])) {
                                 echo "<td>" . $row['comment_date'] . "</td>" ;
 
                                 echo "<td>
-                                <a href='comment.php?do=edit&comid=" .$row['c_id'] . "'class='btn btn-success'>edit</a>
-                                <a href='comment.php?do=delete&comid=" .$row['c_id'] . "'class='btn btn-danger confirm'>del</a>"; 
+                                <a href='comment.php?do=edit&comid=" .$row['c_id'] . "'class='badge badge-outline-warning'>edit</a>
+                                <a href='comment.php?do=delete&comid=" .$row['c_id'] . "'class='badge badge-outline-danger mr-1'>del</a>"; 
 
                                 if($row['status'] ==0 ){
 
                                 echo "<a href='comment.php?do=approve&comid="
                                 .$row['c_id'] . 
-                                "'class='btn btn-info activate'>approve</a>";
+                                "'class='badge badge-outline-success'>approve</a>";
 
                                 }
 
@@ -95,8 +100,16 @@ if (isset($_SESSION['username'])) {
                             ?>
                             
                         </table>
+
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+
+                        
+                    
 
         
 
@@ -122,8 +135,9 @@ if (isset($_SESSION['username'])) {
                 
                 if( $count > 0 ) { ?>
 
-                <h1 class="text-center"><?php echo lang('Edit-comment') ; ?></h1> 
-                <div class="container">
+                <div class="container adddd">
+                <h1 class="mb-4"><?php echo lang('Edit-comment') ; ?></h1> <hr>
+
                     <form action="?do=update" class="" method="POST">
                         <!-- اليوزر اي دي الي رح اختارو واحدث من خلالو عن الاي دي  -->
                         <input type="hidden" name="comid" value="<?php echo $comid ?>" >

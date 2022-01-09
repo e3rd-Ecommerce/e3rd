@@ -1,12 +1,14 @@
 <?php 
 
 // manage members page 
-// you can add | edit | delete members from here 
+// you can add | edit | delete members from here
+
 
 ob_start(); 
-session_start() ;
+session_start() ; 
 
 $pageTitle= 'members' ; 
+$count =1;
 
 if (isset($_SESSION['username'])) {
 
@@ -21,9 +23,7 @@ if (isset($_SESSION['username'])) {
 
             }else  {
                 $do ='manage' ; // الصفحة الرئيسية
-
             }
-
 
             if($do == 'manage'){  //manage member page 
 
@@ -35,75 +35,103 @@ if (isset($_SESSION['username'])) {
                     $query = 'AND regstatus = 0 ' ; 
                 }
 
-                $stmt = $con->prepare("SELECT * FROM users WHERE groupid != 1 $query ")  ; //جلب جميع الاعضاء ما عدا الادمن 
+                $stmt = $con->prepare("SELECT * FROM users WHERE groupid != 1 $query ORDER BY userid DESC ")  ; //جلب جميع الاعضاء ما عدا الادمن 
 
                 $stmt->execute(); 
 
                 //assign to variable 
                 $row = $stmt->fetchAll();
             
-            
+                if(! empty($row)){
+
             ?>
 
-                <h1 class="text-center"><?php echo lang('mange-members') ; ?></h1> 
-                <div class="container">
-                    <div class="tabel-responsive">
-                        <table class="main-table text-center table table-bordered">
-                            <tr>
-                                <td>#id</td>
-                                <td>user name</td>
-                                <td>email</td>
-                                <td>full name</td>
-                                <td>registerd date</td>
-                                <td>control</td>
-                            </tr>
+                        <div class="row mt-5">
+                        <div class="col-12 grid-margin">
+                        <div class="card">
+                        <div class="card-body"> 
+                        <h2 class="card-title mt-5 text-center text-muted">manage members</h2>
+                        <div class="table-responsive">
+                        <table class="table">
 
+                            <tr>
+                                <td>#</td>
+                                <td>Image</td>
+                                <td>User Name</td>
+                                <td>Email</td>
+                                <td>Full Name</td>
+                                <td>registerd date</td>
+                                <td>Control</td>
+                            </tr>
                             <?php 
                             foreach($row as $row) {
 
                                 echo "<tr>" ; 
-                                echo "<td>" . $row['userid'] . "</td>" ;
+                                echo "<td>" .$count++. "</td>" ;
+                                echo "<td><img src='../imageAdmin/".$row['image']."' alt='Not Found'></td>";
                                 echo "<td>" . $row['username'] . "</td>" ; 
                                 echo "<td>" . $row['email'] . "</td>" ;
                                 echo "<td>" . $row['fullname'] . "</td>" ;
                                 echo "<td>" . $row['date'] . "</td>" ; 
                                 echo "<td>
-                                <a href='members.php?do=edit&userid=" .$row['userid'] . "'class='btn btn-success'>edit</a>
-                                <a href='members.php?do=delete&userid=" .$row['userid'] . "'class='btn btn-danger confirm'>del</a>"; 
+                                <a href='members.php?do=edit&userid=" .$row['userid'] . "'class='badge badge-outline-warning'>edit</a>
+                                <a href='members.php?do=delete&userid=" .$row['userid'] . "'class='badge badge-outline-danger mr-1'>del</a>"; 
 
                                 if($row['regstatus'] ==0 ){
 
-                                echo "<a href='members.php?do=activate&userid=" .$row['userid'] . "'class='btn btn-info activate'>activate</a>";
+                                echo "<a href='members.php?do=activate&userid=" .$row['userid'] . "'class='badge badge-outline-success'>activate</a>";
 
                                 }
 
                                 echo  "</td>";
                                 echo "</tr>" ; 
-
-
                             } 
                             ?>
                             
                         </table>
+                        
                         </div>
-                        <a href="members.php?do=add" class="btn btn-primary"> new members </a> 
+                        <div>
+                        <a href="members.php?do=add" class="btn btn-primary mt-4"> new members </a> 
+                        </div>
+                        </div>
                     </div>
+                </div>
+                
 
-        
+        <?php  } else {
+            echo '<div class="container">' ; 
+            echo '<div class="nice-message"> there\'s No member to show </div> '; 
+            if ( !(isset($_GET['page']) && $_GET['page'] == 'panding')){
+            echo '<a href="members.php?do=add" class="btn btn-primary"> new members </a>'; 
+            }
+
+
+            echo '</div>' ; 
+        } ?>
 
 <?php
             }
 
 
             elseif($do == 'add') {  //add new members  ?>
+                
+                <div class="container adddd">
+                <h1 class="">Add Members</h1> <hr>
 
-                <h1 class="text-center"><?php echo lang('add-members') ; ?></h1> 
-                <div class="container">
-                    <form action="?do=insert" class="" method="POST">
+                    <form action="?do=insert" class="" method="POST" enctype="multipart/form-data">
+
+                        <!-- start Image field -->
+                        <div class=" row mb-3  ">
+                            <div class="form-group col-sm-10 col-md-4">
+                                <label class="col-form-label">Enter Image (Optional)</label><br>
+                                <input type="file" name="image" value="">
+                            </div>
+                        </div>
 
                         <!-- start username field -->
                         <div class=" row mb-3  ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('username') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('username') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="text" name="username" class="form-control"  autocomplete="off" required="required" placeholder="username to login into shop"/>
                             </div>
@@ -111,18 +139,18 @@ if (isset($_SESSION['username'])) {
                         <!-- end username -->
 
                         <!-- start password field -->
-                        <div class="row mb-3 div">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('password') ; ?></label>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('password') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
-                                <input type="password" name="password" class="password form-control"  autocomplete="new-password" required="required" placeholder="password must be hard"/>
-                                <i class="show-pass fa fa-eye fa-2x"></i>
+                                <input type="password" name="password" class="form-control"  autocomplete="new-password" required="required" placeholder="password must be hard"/>
+                                <i class="bi bi-eye"></i>
                             </div>
                         </div>
                         <!-- end password -->
 
                             <!-- start email field -->
                             <div class=" row mb-3">
-                            <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('email') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"><?php echo lang('email') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="email" name="email"  class="form-control" required="required" placeholder="email must be valid"  />
                             </div>
@@ -131,7 +159,7 @@ if (isset($_SESSION['username'])) {
 
                             <!-- start full name field -->
                             <div class="row mb-3 ">
-                            <label class="col-sm-2 col-lg-1 col-form-label"> <?php echo lang('full-name') ; ?></label>
+                            <label class="col-sm-2 col-md-2 col-lg-2 col-form-label"> <?php echo lang('full-name') ; ?></label>
                             <div class="col-sm-10 col-md-4"> 
                                 <input type="text" name="fullname"  class="form-control" placeholder="full name appear in your profile page" />
                             </div>
@@ -141,13 +169,14 @@ if (isset($_SESSION['username'])) {
                         <!-- start save btn field -->
                         <div class="mt-3">
                             <div class="col-sm-offset-2 col-sm-10 "> 
-                                <input type="submit" value="add member" class="btn btn-info " />
+                                <input type="submit" value="add member" class="btn btn-info"  />
                             </div>
                         </div>
                         <!-- end save btn -->
                         
                     </form>
                 </div>
+            
 
             <?php
             
@@ -165,6 +194,16 @@ if (isset($_SESSION['username'])) {
                     $pass  = $_POST['password'];
                     $email = $_POST['email'];
                     $name  = $_POST['fullname'];
+                    $imagePath = '';
+                
+                    if (!empty($_FILES['image']['name'])) {
+                        $image = $_FILES['image'] ?? null; 
+                        if ($image) {
+                            $imagePath = $image['name'];
+                            move_uploaded_file($image['tmp_name'],"../imageAdmin/$imagePath");
+                        }
+                    }
+
                     $hashpass = sha1($_POST['password']) ;  // تشفير للباس وعشان الانبتي تاع الباس الفاضي الو هاش
 
                     // فالديشكن للفورم 
@@ -198,7 +237,7 @@ if (isset($_SESSION['username'])) {
                     if(empty($formErros)){
 
                         // check if user exist in database
-                        $check =  checkitem("username","users" , $user) ; 
+                        $check =  checkitem("username","users" , $user); 
                         if($check == 1){
 
                             $theMsg=  '<div class="alert alert-danger" sorry this user is exist </div> '  ; 
@@ -211,14 +250,15 @@ if (isset($_SESSION['username'])) {
                                 // insert user info in database
                                 
                                 $stmt = $con->prepare("INSERT INTO 
-                                                        users(username,password,email,fullname,regstatus , date)
-                                                        VALUE(:user , :pass , :email  ,:fname , 1 , now() )
+                                                        users(username,password,email,fullname,regstatus , date,image)
+                                                        VALUE(:user , :pass , :email  ,:fname , 1 , now() ,:image)
                                                         ") ; 
                                 $stmt->execute(array(
                                     'user' => $user ,
                                     'pass' => $hashpass , 
                                     'email' =>$email , 
-                                    'fname'=> $name 
+                                    'fname'=> $name ,
+                                    'image'=> $imagePath
                                 )) ; 
                             
             
@@ -245,6 +285,8 @@ if (isset($_SESSION['username'])) {
 
         }   elseif($do == 'edit'){   //edit page
 
+
+
                 // بتحطط من الجيت ريكويست انو اليوزر اي دي رقم و بجيب الانتجر فاليو 
             $userid = isset($_GET['userid']) && is_numeric($_GET['userid']) ? intval($_GET['userid']) :  0  ; 
                 // بختار البيانات من الداتا بيس من الاي دي المعين
@@ -264,11 +306,25 @@ if (isset($_SESSION['username'])) {
                 
                 if( $count > 0 ) { ?>
 
-                <h1 class="text-center"><?php echo lang('Edit-members') ; ?></h1> 
-                <div class="container">
-                    <form action="?do=update" class="" method="POST">
+                <div class="container adddd">
+                <h1 class="">Edit Members</h1> <hr>
+
+                    <form action="?do=update" class="" method="POST" enctype="multipart/form-data">
                         <!-- اليوزر اي دي الي رح اختارو واحدث من خلالو عن الاي دي  -->
                         <input type="hidden" name="userid" value="<?php echo $userid ?>" >
+                        
+                        <!-- start Image field -->
+                        <div class=" row mb-3  ">
+                            <?php if ($row['image']): ?>
+                                <img src="../imageAdmin/<?=$row['image']?>" class="product-img-view" style="width: 20% !important;">
+                            <?php endif; ?>
+
+                            <div class="form-group">
+                                <label><?=$row['image']?></label><br>
+                                <input type="file" name="image" value="<?=$row['image']?>">
+                            </div>
+                        </div>
+                        
                         <!-- start username field -->
                         <div class=" row mb-3  ">
                             <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('username') ; ?></label>
@@ -280,10 +336,9 @@ if (isset($_SESSION['username'])) {
                         <!-- start password field -->
                         <div class="row mb-3">
                             <label class="col-sm-2 col-lg-1 col-form-label"><?php echo lang('password') ; ?></label>
-                            <div class="col-sm-10 col-md-4 div"> 
+                            <div class="col-sm-10 col-md-4"> 
                                 <input type="hidden" name="oldpassword" value="<?php echo $row['password'] ?>" />
-                                <input type="password" name="newpassword" class="password form-control"  autocomplete="new-password"  placeholder="leave blank if you font want to change"/>
-                                <i class="show-pass fa fa-eye fa-1x" style="left: 325px;"></i>
+                                <input type="password" name="newpassword" class="form-control"  autocomplete="new-password"  placeholder="leave blank if you font want to change"/>
                             </div>
                         </div>
                         <!-- end password -->
@@ -335,6 +390,16 @@ if (isset($_SESSION['username'])) {
                 $user  = $_POST['username'];
                 $email = $_POST['email'];
                 $name  = $_POST['fullname'];
+                $imagePath = '';
+                
+                if (!empty($_FILES['image']['name'])) {
+                    $image = $_FILES['image'] ?? null; 
+                    if ($image) {
+                        $imagePath = $image['name'];
+                        move_uploaded_file($image['tmp_name'],"../imageAdmin/$imagePath");
+                    }
+                }
+
                 // password 
                 $pass= '' ; 
                 if(empty($_POST['newpassword'])) {
@@ -346,6 +411,8 @@ if (isset($_SESSION['username'])) {
 
                 // فالديشكن للفورم 
                 $formErros = array() ; 
+
+
                 if(empty($user)){
                     $formErros[] = '<div class="alert alert-danger"> username cant be <strong> empty </strong> </div>' ;
                 }
@@ -370,24 +437,65 @@ if (isset($_SESSION['username'])) {
 
                 // لو مفيش ايرور بالفالديشن كمل جيب البيانات من داتا بيس
                 if(empty($formErros)){
-                    // update the database with this info 
-                    $stmt = $con->prepare("UPDATE
-                                                users
-                                            SET 
-                                                username = ? ,
-                                                email = ? ,
-                                                fullname = ? ,
-                                                password =? 
-                                            WHERE 
-                                                userid = ? "); 
 
-                    $stmt->execute(array($user,$email,$name,$pass,$id)) ; 
-                    // echo success message
+// /منشيك اذا الاسم الي بدنا نعدلو موجود لاسم مستخدم اخر 
+                    $stmt2 = $con->prepare("SELECT
+                                            * 
+                                            FROM 
+                                            users
+                                            WHERE 
+                                            username = ?
+                                            AND 
+                                            userid != ? "); 
+                    $stmt2->execute(array($user,$id));
+                    $count=$stmt2->rowCount();
                     
-                    $theMsg= "<div class='alert alert-success'>"  .   $stmt->rowCount() . ' Record Updated  </div>' ; // عدد الريكورد التي تمت 
-                    redircthome($theMsg ,'back') ; // فنكشن 
-                
-                
+                    //$row =$stmt2->fetch(PDO::FETCH_ASSOC); 
+                    // echo "<pre>";
+                    // var_dump($row);
+                    // echo "</pre>";die;
+                    if ($imagePath == '') {
+                        $stmt2 = $con->prepare("SELECT
+                                            * 
+                                            FROM 
+                                            users
+                                            WHERE 
+                                            userid = ? "); 
+                    $stmt2->execute(array($id));
+                    $row =$stmt2->fetch(PDO::FETCH_ASSOC);
+                        $imagePath = $row['image'];
+                    
+                    }
+                     
+                    if($count == 1) {
+
+                        $theMsg = "<div class='alert alert-danger'> sorry this user is exist </div>";
+                        redircthome($theMsg , 'back') ; // فنكشن 
+
+                    } 
+
+                    else {
+
+                            // update the database with this info 
+                            $stmt = $con->prepare("UPDATE
+                                users
+                            SET 
+                                username = ? ,
+                                email = ? ,
+                                fullname = ? ,
+                                password =? ,
+                                image = ?
+                            WHERE 
+                                userid = ? "); 
+
+                            $stmt->execute(array($user,$email,$name,$pass,$imagePath,$id)) ; 
+                            // echo success message
+
+                            $theMsg= "<div class='alert alert-success'>"  .   $stmt->rowCount() . ' Record Updated  </div>' ; // عدد الريكورد التي تمت 
+                            redircthome($theMsg ,'back') ; // فنكشن 
+
+                    
+                    }
 
                 }
 

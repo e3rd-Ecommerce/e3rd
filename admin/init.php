@@ -8,7 +8,9 @@ include_once 'connect.php' ;
     $languages = 'includes/languages/'; // مسار اللغة 
     $func = 'includes/functions/' ; //مسار الفنكشن 
     $css = 'layout/css/' ; // /مسار الcss 
+    $cssandjs = 'layout/assets/' ; 
     $js = "layout/js/"; //Js Directiory
+
 
 
     // انكلود للملفات المهمه 
