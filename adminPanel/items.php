@@ -63,9 +63,14 @@ if(isset($_SESSION['Username'])){
 
                         <?php
                             foreach($items as $item){
+                                $dirname = "../imageItems/".$item['image'];
+                                if (is_dir($dirname)) {
+                                    //$image ='';
+                                    $images = glob($dirname."/*");
+                                }
                                 echo "<tr>";
                                     echo "<td>". $item['item_ID'] . "</td>";
-                                    //echo "<td><img src='../images/".$item['image']."' alt='Not Found'></td>";
+                                    echo "<td><img src='".$images[0]."' alt='Not Found' style='width: 100px;'></td>";
                                     echo "<td>". $item['name'] . "</td>";
                                     echo "<td>". $item['description'] . "</td>";
                                     echo "<td>". $item['price'] . "</td>";
@@ -88,9 +93,7 @@ if(isset($_SESSION['Username'])){
                 <a href="items.php?do=Add" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Item</a>
             </div> 
 
-<?php       } else{
-
-                    
+<?php       } else{ 
                 $theMsg='<div class="nice-message">Theres No items To show here</div>';
                 echo '<div class="container mt-3 text-center">';
                     echo $theMsg;
@@ -228,7 +231,9 @@ if(isset($_SESSION['Username'])){
                     $tags       = $_POST['tags'];
 
                     // File upload configuration
-                    $dir = rand(0,1000000) . "_".$name;
+                    $dir = rand(0,1000000) . "_".$name;//name of directory
+
+                    //to check the directory
                     if (! is_dir("../imageItems/$dir")) {
                         mkdir("../imageItems/$dir"); 
                     }
@@ -236,7 +241,7 @@ if(isset($_SESSION['Username'])){
                     $targetDir = "../imageItems/$dir/"; 
                     $allowTypes = array('jpg','png','jpeg','gif','jfif'); 
 
-                    //$statusMsg = $errorMsg = $insertValuesSQL = $errorUpload = $errorUploadType = '';
+                    
                     $fileNames = array_filter($_FILES['files']['name']); 
                         if(!empty($fileNames)){ 
                             foreach($_FILES['files']['name'] as $key=>$val){ 
@@ -350,25 +355,35 @@ if(isset($_SESSION['Username'])){
                                 </div>
 
                                 <div class="card-body">
-                                    <form action="?do=Update" method="POST">
+                                    <form action="?do=Update" method="POST" enctype="multipart/form-data">
                                     <input 
                                             type="hidden" 
                                             name="itemid" 
                                             value="<?php echo $itemid;?>">
                                     <div class="container cat" style="display: contents">
-                                        <?php
-                                            if($item['image'] != ''){
-                                                $image ='';
-                                                $d = $item['image'];
-                                                $dirname = "../imageItems/$d/";
-                                                $images = glob($dirname."*");
-                                                for ($i=0; $i<count($images); $i++)
-                                                {
-                                                    $image = $images[$i];
-                                                    echo "<img src='".$image."' alt='Not Fund' />";
-                                                }
-                                            } ?>
+                                    <?php
+                                        $dirname = "../imageItems/".$item['image'];
+                                        if (is_dir($dirname)) {
+                                            $image ='';
+                                            $images = glob($dirname."/*");
+                                            for ($i=0; $i<count($images); $i++)
+                                            { 
+                                                $image = $images[$i];  ?>
+                                                <img src="<?=$image?>" alt="not found" style="width:30%"
+                                                onmouseover="bigImg(this)" onmouseout="normalImg(this)" onclick="deleteimage('<?=$image?>')">
+                                            <?php }
+                                        }
+                                    ?>
                                     </div>
+
+                                    <!-- start multiple image field -->
+                                    <div class="custom-container">
+                                        <div class="button-wrap">
+                                                <label class="button mb-3" for="upload">Upload File</label>
+                                                <input id="upload" type="file" name="files[]" multiple>
+                                        </div>
+                                    </div>
+                                    <!-- End image -->
                                         <input 
                                             type="text" 
                                             name="name" 
@@ -547,6 +562,37 @@ if(isset($_SESSION['Username'])){
                 $member     = $_POST['member'];
                 $category   = $_POST['category'];
                 $tags       = $_POST['tags'];
+
+                // File upload configuration
+                $stmt = $con->prepare("SELECT * FROM items WHERE item_ID = ?");
+                $stmt->execute(array($id));
+
+                $item= $stmt->fetch(); 
+
+                $dirname = "../imageItems/".$item['image'];
+                if ( is_dir($dirname)) { 
+                    //echo $dirname;die;
+                    $targetDir = "$dirname/"; 
+                    $allowTypes = array('jpg','png','jpeg','gif','jfif'); 
+            
+                    $fileNames = array_filter($_FILES['files']['name']); 
+                    if(!empty($fileNames)){ 
+                        foreach($_FILES['files']['name'] as $key=>$val){ 
+                            // File upload path 
+                            $fileName = basename($_FILES['files']['name'][$key]); 
+                            $targetFilePath = $targetDir . $fileName; 
+                        
+                            // Check whether file type is valid 
+                            $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION); 
+                            if(in_array($fileType, $allowTypes)){ 
+                                // Upload file to server 
+                                move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath);     
+                            }
+                        }  
+                    }else{ 
+                        $statusMsg = 'Please select a file to upload.'; 
+                    }
+                }
 
                 //Validate The Form
                 $formErrors = array(); //Array To coolect Al Errors

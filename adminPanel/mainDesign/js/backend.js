@@ -82,3 +82,38 @@ $(function (){
     });
 
 });
+
+
+
+
+function bigImg(x) {
+    x.style.height = "34%";
+    x.style.width = "34%";
+}
+
+function normalImg(x) {
+    x.style.height = "30%";
+    x.style.width = "30%";
+}
+
+function deleteimage(x) {
+    let text = "Are you Sure To Delete This Image !\n      Either OK or Cancel.";
+    if (confirm(text) == true) {
+        //alert("You pressed OK!");
+        let from_data = new FormData;
+        from_data.append('imagePath',x);
+        const xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //alert(this.responseText);
+            }
+        };
+        xhttp.open("POST","deleteImage.php",true);
+        xhttp.send(from_data);
+        location.reload();
+
+    } else {
+        alert("You canceled!");
+    }
+}
