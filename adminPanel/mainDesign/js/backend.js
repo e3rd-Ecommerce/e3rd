@@ -55,6 +55,7 @@ $(function (){
         $(this).next('.full-view').fadeToggle(400);
     });
 
+
     $('.options span').click(function () {
 
         $(this).addClass('active').siblings('span').removeClass('active')
@@ -68,6 +69,7 @@ $(function (){
             $('.cat .full-view').fadeOut(200);
         }
     });
+
 
     //Show Delete Button on Hover on child cats
     $(".child-link").hover(function(){

@@ -60,8 +60,8 @@
                                     echo "<tr>";
                                         echo "<td>". $row['userID'] . "</td>";
                                         echo "<td><img src='";
-                                                if(!empty($row['avatar'])){echo "uploads/avatars/". $row['avatar'];}
-                                                else{echo "uploads/avatars/no_avatar.png";}
+                                                if(!empty($row['avatar'])){echo "../images/". $row['avatar'];}
+                                                else{echo "../images/no_avatar.png";}
                                         echo "' alt='Avatar here'/></td>";
                                         echo "<td>". $row['UserName'] . "</td>";
                                         echo "<td>". $row['Email'] . "</td>";
@@ -108,6 +108,7 @@
                                             <input type="password" name="password" class="form-control my-2" autocomplete="new-password" placeholder="Enter User Password" required="required">
                                             <input type="email" name="email" placeholder="Email Must Be Valid" class="form-control my-2" autocomplete="new-password" required="required" >
                                             <input type="text" name="full" placeholder="Full Name Appear In Your Profile Page" class="form-control my-2" required="required">
+                                           
                                             <!--Start User profile picture-->
                                             <div class="custom-container">
                                                 <div class="button-wrap">
@@ -116,6 +117,7 @@
                                                 </div>
                                             </div>
                                             <!--End User Profile Picture-->
+                                            
                                             <div class="d-grid col-12">
                                                 <button class="btn btn-success" type="submit">Add Member</button>
                                             </div>
@@ -138,18 +140,29 @@
                     echo '<div class="container">';
 
                     //Uploade Variables
-                    $avatar = $_FILES['avatar'];
-
-                    $avatarName     = $avatar['name']; //File name with extension
-                    $avatarSize     = $avatar['size']; //File Size in KiloByte
-                    $avatarTmpName  = $avatar['tmp_name']; //is the temporary name of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
-                    $avatarType     = $avatar['type']; //File type [img/pdf/powerpoint and so on..]
+                    //$avatar = $_FILES['avatar'] ?? null;
+                    $avatarName ='';
                     
+                    if (!empty($_FILES['avatar']['name'])) {
+                        $avatar = $_FILES['avatar'] ?? null; 
+                        if ($avatar) {
+
+                            $avatarName = $avatar['name'];
+                            $avatarName     = $avatar['name']; //File name with extension
+                            $avatarSize     = $avatar['size']; //File Size in KiloByte
+                            $avatarTmpName  = $avatar['tmp_name']; //is the temporary name of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
+                            $avatarType     = $avatar['type']; //File type [img/pdf/powerpoint and so on..]
+                            //Get allowd Avatar Extension to check if the file from allowd extensions or not
+                            $exploaded = explode('.', $avatarName);
+                            $avatarExtension = strtolower(end($exploaded));
+                            $avatarPath = rand(0,1000000) . "_" . $avatarName;
+                            move_uploaded_file($avatar['tmp_name'],"../images/$avatarPath");
+                        }
+                    }
+
                     $avatarAllowedExtensions = array("jpeg","jpg","png","gif","jfif"); //امتداد الملفات(الصور اللي بدي اسمع للشخص يرفعها)
                     
-                    //Get allowd Avatar Extension to check if the file from allowd extensions or not
-                    $exploaded = explode('.', $avatarName);
-                    $avatarExtension = strtolower(end($exploaded));
+                    
 
                     //Get Vraiables Form The Form
                     $user = $_POST['username'];
@@ -201,8 +214,8 @@
                     //Check if there is No Error Procees The Update Opertion
                     if(empty($formErrors)){
 
-                        $avatar = rand(0,1000000) . "_" . $avatarName;
-                        move_uploaded_file($avatarTmpName,"uploads\avatars\\" . $avatar); 
+                        //$avatar = rand(0,1000000) . "_" . $avatarName;
+                        //move_uploaded_file($avatarTmpName,"uploads\avatars\\" . $avatar); 
 
                         //Check If User Exist In DataBase
                         $check = checkItem("UserName", "users", $user);
@@ -223,7 +236,7 @@
                                 'zpass'     => $hasehdPass,
                                 'zmail'     => $email,
                                 'zname'     => $name,
-                                'zavatar'   => $avatar
+                                'zavatar'   => $avatarPath
                                 ));
 
                                 //echo Success Message
@@ -273,10 +286,31 @@
                                     </div>
 
                                     <div class="card-body">
-                                        <form action="?do=Update" method="POST">
+                                        <form action="?do=Update" method="POST" enctype='multipart/form-data'>
+
+                                             <!--Start User profile picture-->
+                                             <div class="custom-container">
+                                             
+                                                <img src="../images/<?php if ($row['avatar'] == '') {
+                                                    echo "no_avatar.png";
+                                                }else{
+                                                    echo $row['avatar'];
+                                                }?>" alt="Not Found" style="width: 35%;"/>
+                                                
+                                            </div>
+                                            
+                                            <div class="custom-container">
+                                                <div class="button-wrap">
+                                                    <label class="button mb-3" for="upload">Upload File</label>
+                                                    <input id="upload" type="file" name="avatar">
+                                                </div>
+                                            </div>
+                                            <!--End User Profile Picture-->
+                                            
                                             <input type="hidden" name="userid" value="<?php echo $userid;?>">
                                             <input type="text" name="username" placeholder="Username" class="form-control my-2" value="<?php echo $row['UserName'] ?>" autocomplete="off" required="required">
                                             <input type="hidden" name="oldpassword" value="<?php echo $row['Password']; ?>">
+                                            <input type="password" name="newpassword" class="form-control my-2" autocomplete="new-password" placeholder="Leave it Blanck If You Dont Want To cahnge">
                                             <input type="password" name="newpassword" class="form-control my-2" autocomplete="new-password" placeholder="Leave it Blanck If You Dont Want To cahnge">
                                             <input type="email" name="email" placeholder="Email" class="form-control my-2" value="<?php echo $row['Email'] ?>" autocomplete="new-password" required="required">
                                             <input type="text" name="full" placeholder="Full Name" value="<?php echo $row['FullName'] ?>" class="form-control my-2" required="required">
@@ -309,6 +343,30 @@
                     $user = $_POST['username'];
                     $email = $_POST['email'];
                     $name = $_POST['full'];
+                    
+                    $avatarPath ='';
+                    
+                    if (!empty($_FILES['avatar']['name'])) {
+                        $avatar = $_FILES['avatar'] ?? null;
+                        if ($avatar) {
+                            $avatarName = $avatar['name'];
+                            $avatarName     = $avatar['name']; //File name with extension
+                            $avatarSize     = $avatar['size']; //File Size in KiloByte
+                            $avatarTmpName  = $avatar['tmp_name']; //is the temporary name of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
+                            $avatarType     = $avatar['type']; //File type [img/pdf/powerpoint and so on..]
+                            //Get allowd Avatar Extension to check if the file from allowd extensions or not
+                            if($avatarSize > 4194304){ //in byte
+                                $formErrors[]="Avatar Cant be Larger than <strong>4 Megabyte</strong>";
+                            }
+                            $exploaded = explode('.', $avatarName);
+                            $avatarExtension = strtolower(end($exploaded));
+                            $avatarPath = rand(0,1000000) . "_" . $avatarName;
+                            move_uploaded_file($avatar['tmp_name'],"../images/$avatarPath");
+                        }
+                    }
+
+                    $avatarAllowedExtensions = array("jpeg","jpg","png","gif","jfif"); //امتداد الملفات(الصور اللي بدي اسمع للشخص يرفعها)
+                    
 
                     //Password Trick Using Ternary condition
                     $pass = empty($_POST['newpassword']) ? $_POST['oldpassword'] : sha1($_POST['newpassword']);
@@ -327,13 +385,13 @@
                     if(empty($user)){
                         $formErrors[] =  "Username cant be empty";
                     }
-                    if(empty($name)){
-                        $formErrors[] = "Full name cant bet empty";
-                    }
+
                     if(empty($email)){
                         $formErrors[]= "email cant bet empty</div>";
                     }
-
+                    if(!empty($avatarName) && !in_array($avatarExtension,$avatarAllowedExtensions)){
+                        $formErrors[]="This Extension Is not <strong>Allowed</strong>";
+                    }
                     //Print All Errors
                     foreach($formErrors as $error){
                         echo '<div class="alert alert-danger">' .$error .'</div>';
@@ -355,8 +413,7 @@
                         $rows = $stmt2->rowCount();
 
                          if($rows == 1){
-
-                         
+                            
                             //echo Success Message
                             $theMsg= "<div class='alert alert-danger'>Sorry This Username Is Exist </div>";
                             echo '<div class="container mt-3 text-center">';
@@ -365,10 +422,17 @@
                             
                          } else {
 
+                            $stmt2 =  $con->prepare("SELECT * FROM users WHERE userID = ?");
+                            $stmt2->execute(array($id));
+                            $rows = $stmt2->fetch();
+
+                            if ($avatarPath == '') {
+                                $avatarPath = $rows['avatar'];
+                            }
                             
                             //Update The DataBase With This Info
-                            $stmt = $con->prepare("UPDATE users SET UserName = ? , Email = ? , FullName = ?, Password = ? WHERE userID = ?");
-                            $stmt->execute(array($user,$email,$name,$pass,$id));
+                            $stmt = $con->prepare("UPDATE users SET UserName = ? , Email = ? , FullName = ?, Password = ? ,avatar = ? WHERE userID = ?");
+                            $stmt->execute(array($user,$email,$name,$pass,$avatarPath,$id));
 
                             //echo Success Message
                             $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';

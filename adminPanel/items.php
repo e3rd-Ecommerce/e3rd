@@ -51,6 +51,7 @@ if(isset($_SESSION['Username'])){
                     <table class="main-table text-center table table-bordered">
                         <tr> 
                             <td>#ID</td>
+                            <td>Image</td>
                             <td>Name</td>
                             <td>Description</td>
                             <td>Price</td>
@@ -64,6 +65,7 @@ if(isset($_SESSION['Username'])){
                             foreach($items as $item){
                                 echo "<tr>";
                                     echo "<td>". $item['item_ID'] . "</td>";
+                                    //echo "<td><img src='../images/".$item['image']."' alt='Not Found'></td>";
                                     echo "<td>". $item['name'] . "</td>";
                                     echo "<td>". $item['description'] . "</td>";
                                     echo "<td>". $item['price'] . "</td>";
@@ -106,7 +108,8 @@ if(isset($_SESSION['Username'])){
                                 </div>
 
                                 <div class="card-body">
-                                    <form action="?do=Insert" method="POST">
+                                    <form action="?do=Insert" method="POST" enctype='multipart/form-data'>
+                                        
                                         <input 
                                             type="text" 
                                             name="name" 
@@ -186,6 +189,15 @@ if(isset($_SESSION['Username'])){
                                             class="form-control my-2" 
                                             > 
                                         <!--End Tags Feild-->
+                
+                                        <!--Start User profile picture-->
+                                        <div class="custom-container">
+                                            <div class="button-wrap">
+                                                <label class="button mb-3" for="upload">Upload File</label>
+                                                <input id="upload" type="file" name="files[]" multiple>
+                                            </div>
+                                        </div>
+                                        <!--End User Profile Picture-->
 
                                         <button class="btn btn-success btn-sm" >Add Item</button>
                                     </form>
@@ -215,7 +227,32 @@ if(isset($_SESSION['Username'])){
                     $cat        = $_POST['category'];
                     $tags       = $_POST['tags'];
 
-                
+                    // File upload configuration
+                    $dir = rand(0,1000000) . "_".$name;
+                    if (! is_dir("../imageItems/$dir")) {
+                        mkdir("../imageItems/$dir"); 
+                    }
+
+                    $targetDir = "../imageItems/$dir/"; 
+                    $allowTypes = array('jpg','png','jpeg','gif','jfif'); 
+
+                    //$statusMsg = $errorMsg = $insertValuesSQL = $errorUpload = $errorUploadType = '';
+                    $fileNames = array_filter($_FILES['files']['name']); 
+                        if(!empty($fileNames)){ 
+                            foreach($_FILES['files']['name'] as $key=>$val){ 
+                                // File upload path 
+                                $fileName = basename($_FILES['files']['name'][$key]); 
+                                $targetFilePath = $targetDir.$fileName; 
+
+                                // Check whether file type is valid 
+                                $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION); 
+                                if(in_array($fileType, $allowTypes)){ 
+                                    // Upload file to server 
+                                    move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath);
+                                }
+                            }
+                        }
+
                 //Validate The Form
                 $formErrors = array(); //Array To coolect Al Errors
 
@@ -253,11 +290,10 @@ if(isset($_SESSION['Username'])){
 
                             //inser User Info in DataBase
                             $stmt = $con->prepare("INSERT INTO 
-                                                    items(name,description,price,country_made,added_date, status, approve, cat_ID, member_ID, tags)
-                                                    VALUES(:zname, :zdesc, :zprice, :zcountry, now(), :zstatus, 1, :zcat, :zmember, :ztags)");
+                                                    items(name,description,price,country_made,added_date, status, approve, cat_ID, member_ID, tags,image)
+                                                    VALUES(:zname, :zdesc, :zprice, :zcountry, now(), :zstatus, 1, :zcat, :zmember, :ztags,:image)");
 
                             $stmt->execute(array(
-                            
                                 'zname'     => $name,
                                 'zdesc'     => $desc,
                                 'zprice'    => $price,
@@ -265,7 +301,8 @@ if(isset($_SESSION['Username'])){
                                 'zstatus'   =>$status,
                                 'zcat'      => $cat,
                                 'zmember'   => $member,
-                                'ztags'     => $tags
+                                'ztags'     => $tags ,
+                                'image'     => $dir
                             ));
 
                             //echo Success Message
@@ -318,7 +355,20 @@ if(isset($_SESSION['Username'])){
                                             type="hidden" 
                                             name="itemid" 
                                             value="<?php echo $itemid;?>">
-
+                                    <div class="container cat" style="display: contents">
+                                        <?php
+                                            if($item['image'] != ''){
+                                                $image ='';
+                                                $d = $item['image'];
+                                                $dirname = "../imageItems/$d/";
+                                                $images = glob($dirname."*");
+                                                for ($i=0; $i<count($images); $i++)
+                                                {
+                                                    $image = $images[$i];
+                                                    echo "<img src='".$image."' alt='Not Fund' />";
+                                                }
+                                            } ?>
+                                    </div>
                                         <input 
                                             type="text" 
                                             name="name" 
@@ -569,6 +619,35 @@ if(isset($_SESSION['Username'])){
 
             //If there's record for this id Delete it
             if( $check > 0) { 
+
+
+                function deleteDir($dirPath) {
+                    if (! is_dir($dirPath)) {
+                        throw new InvalidArgumentException("$dirPath must be a directory");
+                    }
+                    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+                        $dirPath .= '/';
+                    }
+                    $files = glob($dirPath . '*', GLOB_MARK);
+                    foreach ($files as $file) {
+                        if (is_dir($file)) {
+                            deleteDir($file);
+                        } else {
+                            unlink($file);
+                        }
+                    }
+                    rmdir($dirPath);
+                }
+                
+                $stmt1 = $con->prepare("SELECT * FROM items WHERE item_ID = ?");
+                $stmt1->execute(array($itemid));
+                $row = $stmt1->fetch();
+                $dir = $row['image'];
+                //echo "../imageItems/$dir";die;
+                if (file_exists("../imageItems/$dir")) {
+                    deleteDir("../imageItems/$dir");  
+                }
+                
 
                 $stmt = $con->prepare("DELETE FROM items WHERE item_ID = :zitem");
 
