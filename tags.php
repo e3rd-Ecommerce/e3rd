@@ -3,8 +3,6 @@
 session_start();
 include 'init.php'; 
 
-
-
 ?>
 
 <div class="container">

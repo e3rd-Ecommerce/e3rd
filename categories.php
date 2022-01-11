@@ -17,9 +17,14 @@ include 'init.php';
                 $items = getAllFrom("*","items", "WHERE cat_ID = {$pageid}","AND approve = 1","item_ID");
                 foreach($items as $item){
 
+                    $dirname = "imageItems/".$item['image'];
+                    if (is_dir($dirname)) {
+                        $images = glob($dirname ."/*");
+                    }
+
                     echo '<div class="col-sm-6 col-md-3">';
                         echo '<div class="card mb-2 item-box">';
-                            echo '<img src="OIP.png" alt="Avatar" class="img-fluid"/>';
+                            echo '<img src="'.$images[0].'" alt="Thumbnail" class="img-fluid product-thumbnail">';
                             echo '<div class="card-body">';
                                     echo '<span class="price-tag">'. $item['price'] .'JOD</span>';
                                     echo '<a href="item.php?itemid=' . $item['item_ID'] .'"><h3 class="card-title">'. $item['name'] .'</h3></a>';

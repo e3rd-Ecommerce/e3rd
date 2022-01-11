@@ -42,12 +42,28 @@
 <div class="container">
     
     <div class="row">
+        
         <div class="col-md-3">
-             <img src="OIP.png" alt="Avatar" class="center-block img-fluid img-thumbnail"/>
+            <div class="product-images">
+                <?php 
+                    $dirname = "imageItems/".$item['image'];
+                    if (is_dir($dirname)) {
+                        $images = glob($dirname ."/*");
+                    }
+                    echo "<img src='".$images[0]."' alt='Item Thumbnail' class='product-thumbnail'>";
+                ?>
+            </div>
         </div>
         <div class="col-md-9 item-info">
-            <h2><?php echo $item['name'];?></h2>
-            <p><?php echo $item['description'];?></p>
+            <div class="row">
+                <div class="col-md-9">
+                    <h2><?php echo $item['name'];?></h2>
+                    <p><?php echo $item['description'];?></p>
+                </div>
+                <div class="col-md-3">
+                   <a href="#" class="btn btn-primary text-light">Add To cart</a>
+                </div>
+            </div>
             <ul class="list-group list-group-flush list-unstyled">
                 <li class="list-item">
                     <i class="fas fa-calendar-week"></i>
