@@ -20,7 +20,21 @@
                     if(isset($_SESSION['user'])){ ?>
 
                         <div class="dropdown my-info text-right float-end">
-                            <img src="OIP.png" alt="Avatar" class="img-fluid rounded-circle img-thumbnail"/>
+                            <?php 
+                                $stmt = $con->prepare("SELECT 
+                                                            avatar
+                                                      FROM 
+                                                            users 
+                                                      WHERE
+                                                           UserName = ?
+                                            ");
+
+                                $stmt->execute(array($_SESSION['user']));
+
+                                $userInfo = $stmt->fetch();
+
+                                echo "<img src='images/". $userInfo['avatar']."' alt='Item Thumbnail' class='product-thumbnail'>";
+                            ?>
                             <button class="btn btn-info dropdown-toggle text-light" type="button" id="nav-toggle" data-bs-toggle="dropdown" >
                                 <?php echo $session_user; ?>
                             </button>
@@ -69,6 +83,20 @@
 
                 <div class="collapse navbar-collapse" id="app-nav">
                     <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item ">
+                            <div class="cart-container">
+                                <a class="nav-link" href="cart.php" class="cart-link">
+                                    <i class="fas fa-shopping-cart cart-icon"></i>
+                                    <span id="cart" class=" cart-counter">
+                                        <?php
+                                            $count =0;
+                                            if ($count == 0) echo $count;
+                                        ?>
+                                    </span>
+                                </a>
+                            <div>
+                        </li>
                         <?php
 
                             $categories = getAllFrom("*", "categories" ,"WHERE parent = 0", "", "ID", "ASC");
@@ -83,6 +111,7 @@
                             }
                         
                         ?>
+                        
                     </ul>
                 </div>
             </div>
