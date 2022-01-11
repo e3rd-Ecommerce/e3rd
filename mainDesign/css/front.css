@@ -2,7 +2,6 @@
 body {
     background-color: #F4F4F4;
     font-size: 16px;
-    height: 3000px;
 } 
 
 a{
@@ -72,6 +71,27 @@ h1{
   height: 40px;
 }
 
+.cart-container{
+  position: relative;
+  width: fit-content;
+}
+
+.cart-container .cart-icon{
+  font-size: 20px;
+} 
+
+.cart-counter{
+  position: absolute;
+  background-color: #007bb6;
+  border-radius: 50%;
+  padding: 0 6px;
+  top: -4px;
+  right: 1px;
+  font-size: 13px;
+  color: white;
+  font-weight: bold;
+}
+
 /*End Header*/
 
 /*Start Categories Page*/
@@ -106,6 +126,11 @@ h1{
   max-height:44px;
   overflow: hidden;
 
+}
+
+.item-card img{
+  height: 250px;
+  
 }
 
 /*End Categories Page*/
@@ -345,6 +370,11 @@ h1{
   margin: 20px 0 0;
 }
 
+ .product-thumbnail{
+  width: 100%;
+  height: 250px;
+}
+
 .item-box .card-body .date{
   text-align: right;
   font-size: 13px;
@@ -447,4 +477,6 @@ h1{
   border-color: transparent rgb(211, 207, 207) transparent transparent;
   left: -20px;
 }
+
+
 /*End Show Item Page*/
