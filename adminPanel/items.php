@@ -65,8 +65,7 @@ if(isset($_SESSION['Username'])){
                             foreach($items as $item){
                                 $dirname = "../imageItems/".$item['image'];
                                 if (is_dir($dirname)) {
-                                    //$image ='';
-                                    $images = glob($dirname."/*");
+                                    $images = glob($dirname ."/*");
                                 }
                                 echo "<tr>";
                                     echo "<td>". $item['item_ID'] . "</td>";
