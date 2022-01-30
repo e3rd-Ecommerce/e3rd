@@ -1,3 +1,4 @@
+
 $(function (){
 
     'use strict';
@@ -17,7 +18,7 @@ $(function (){
     //Trigger The SelectBoxIt Plugin
     $("select").selectBoxIt({
 
-         autoWidth:false
+        autoWidth:false
     });
 
 
@@ -51,4 +52,71 @@ $(function (){
         $($(this).data('class')).text($(this).val());
     });
 });
+
+function bigImg(x) {
+    x.style.height = "34%";
+    x.style.width = "34%";
+}
+
+function normalImg(x) {
+    x.style.height = "30%";
+    x.style.width = "30%";
+}
+
+function deleteimage(x) {
+    let text = "Are you Sure To Delete This Image !\n      Either OK or Cancel.";
+    if (confirm(text) == true) {
+        //alert("You pressed OK!");
+        let from_data = new FormData;
+        from_data.append('imagePath',x);
+        const xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //alert(this.responseText);
+            }
+        };
+        xhttp.open("POST","deleteImage.php",true);
+        xhttp.send(from_data);
+        location.reload();
+
+    } else {
+        alert("You canceled!");
+    }
+}
+
+function search() {
+    let from_data = new FormData;
+    let process = "search";
+    from_data.append('process',process);
+    from_data.append('cat_id',document.getElementById('cat_id').value);
+    from_data.append('search_text',document.getElementById('search').value);
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //alert(this.responseText);
+                document.getElementById('output').innerHTML = 
+                    this.responseText;
+            }
+        };
+        xhttp.open("POST","././search.php",true);
+        xhttp.send(from_data);
+}
+
+
+// $(document).ready(function(){
+//     $("#search").keypress(function(){
+//       $.ajax({
+//         type:'POST',
+//         url:'././search.php',
+//         data:{
+//           name:$("#search").val(),
+//         },
+//         success:function(data){
+//           $("#output").html(data);
+//         }
+//       });
+//     });
+//   });
+
     

@@ -317,26 +317,7 @@ h1{
   width:34px;
   font-size:14px
 }
-.social-icons a.facebook:hover
-{
-  background-color:#3b5998
-}
-.social-icons a.rss:hover
-{
-  background-color:#f26522
-}
-.social-icons a.google-plus:hover
-{
-  background-color:#dd4b39
-}
-.social-icons a.twitter:hover
-{
-  background-color:#00aced
-}
-.social-icons a.linkedin:hover
-{
-  background-color:#007bb6
-}
+
 
 .login-block .the-errors .msg.error{
   margin: 10px 0;
@@ -433,14 +414,6 @@ h1{
   color: #406e92;
 }
 
-.item-info .item-tags a{
-  display: inline-block;
-  background-color: #e5e7ed;
-  margin-right: 5px;
-  padding: 2px 5px;
-  border-radius: 5px;
-  color: #444;
-}
 
 .item-info .item-tags a:hover{
   background-color: #eceeef;
@@ -477,6 +450,7 @@ h1{
   border-color: transparent rgb(211, 207, 207) transparent transparent;
   left: -20px;
 }
-
-
 /*End Show Item Page*/
+
+/*Last Edit*/
+
