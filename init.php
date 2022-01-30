@@ -14,8 +14,13 @@
     $comp = "includes/components/"; //component Directiory
     $lang = "includes/languages/"; //language file directiory
     $func = 'includes/functions/' ; //Funcion Directory
-    $css = "mainDesign/css/"; //css Directiory
-    $js = "mainDesign/js/"; //Js Directiory
+    $css  = "mainDesign/css/"; //css Directiory
+    $js   = "mainDesign/js/"; //Js Directiory
+    $images = "mainDesign/images/";  
+
+
+    
+
 
     //Include THe Important Files
     require_once $func . 'functions.php';

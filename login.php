@@ -27,6 +27,8 @@
                                         UserName = ?
                                 AND 
                                         PASSWORD = ?
+                                AND 
+                                        RegStatus = 1
                                 ");
             
             $stmt->execute(array($user,$hashedPass));
@@ -42,8 +44,11 @@
         
                 $_SESSION['uid'] = $get['userID']; //Register The user id in the session
                 
-                header('Location: index.php'); //Rediredvt To Homepage
+                header('Location: index.php'); //Rediredct To Homepage
                 exit();
+            } else{
+                $theMsg = '<div class="alert alert-danger mt-2 text-center">Waiting For Approve!</div>';
+               echo $theMsg;
             }
         } else {
                 
@@ -77,8 +82,7 @@
 
                 if($pass1 !== $pass2){
 
-                    $formErrors[] = 'Sorry, The password does not match 
-                    ';
+                    $formErrors[] = 'Sorry, The password does not match ';
                 }
             }
 
@@ -126,127 +130,121 @@
         
 ?>
 
-    <main class="login-page">
-        <div class="login-block">
-            <h1><span class="selected" data-class="login">Login</span> | <span  data-class="signup">Signup</span></h1>
-            <!--Start Login Form -->
-            <form class="login" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-user ti-user"></i></span>
-                    <input name="user" type="text" class="form-control" placeholder="Username">
-                    </div>
-                </div>
-                
-                
-                <hr class="hr-xs">
+<!-- ********************************************************************* -->
 
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-lock ti-unlock"></i></span>
-                    <input name="pass" type="password" class="form-control" placeholder="Your password" autocomplete="new-password">
-                    </div>
-                </div>
-
-                <input class="btn btn-primary btn-block" name="login" type="submit" value="Login">
-
-                <!-- <div class="login-footer">
-                    <h6>Or register with</h6>
-                    <ul class="social-icons">
-                        <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
-                    </ul>
-                </div> -->
-
-            </form>
-            <!--End Login Form -->
-
-            <!--Start Signup form -->
-            <form class="signup" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-user ti-user"></i></span>
-                    <input  
-                            pattern = ".{4,}" 
-                            title = "Username must be 4 Chars or greater"
-                            name="username" 
-                            type="text" 
-                            class="form-control" 
-                            placeholder="Choose Username"
-                            required /> <!-- Front End Validation -->
-                    </div>
-                </div>
-
-                <hr class="hr-xs">
-
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-user ti-user"></i></span>
-                    <input  
-                            type="email" 
-                            name="email" 
-                            class="form-control" 
-                            placeholder="Your email"
-                            required />
-                    </div>
-                </div>
-                
-                <hr class="hr-xs">
-
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-lock ti-unlock"></i></span>
-                    <input    
-                            minlength = "4"
-                            type="password" 
-                            name="password" 
-                            class="form-control" 
-                            placeholder="Choose password" 
-                            autocomplete="new-password"
-                            required />
-                    </div>
-                </div>
-
-                <hr class="hr-xs">
-
-                <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-lock ti-unlock"></i></span>
-                    <input 
-                            minlength = "4"
-                            type="password" 
-                            name="password2" 
-                            class="form-control" 
-                            placeholder="Write password again" 
-                            autocomplete="new-password"
-                            required />
-                    </div>
-                </div>
-
-                <input class="btn btn-primary btn-block" name="signup" type="submit" value="Sign up">
-
-                <div class="login-footer">
-                    <h6>Or register with</h6>
-                    <ul class="social-icons">
-                        <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Checkout</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active">Checkout</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
 
-            </form>
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+        <div class="container">
+
+
+            <div class="row new-account-login">
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="title-left">
+                        <h3>Account Login</h3>
+                    </div>
+                    <h5><a data-toggle="collapse" href="#formLogin" role="button" aria-expanded="false">Click here to Login</a></h5>
+
+
+                    <form class="mt-3 collapse review-form-box" id="formLogin" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="InputEmail" class="mb-0">UserName</label>
+                                <input type="text" name="user" class="form-control" id="InputEmail" placeholder="Enter UserName"> </div>
+                            <div class="form-group col-md-6">
+                                <label for="InputPassword" class="mb-0">Password</label>
+                                <input type="password" name="pass" class="form-control" id="InputPassword" placeholder="Password"> </div>
+                        </div>
+                        <button type="submit"  name="login" class="btn hvr-hover">Login</button>
+                    </form>
+
+
+                </div>
+                <!-- done -->
+
+
+
+
+
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="title-left">
+                        <h3>Create New Account</h3>
+                    </div>
+                    <h5><a data-toggle="collapse" href="#formRegister" role="button" aria-expanded="false">Click here to Register</a></h5>
+
+
+                    <form class="mt-3 collapse review-form-box" id="formRegister" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label for="InputName" class="mb-0">User Name</label>
+                                <input type="text" class="form-control" id="InputName" 
+                                pattern = ".{4,}" 
+                                title = "Username must be 4 Chars or greater"
+                                name="username" 
+                                placeholder="User Name"
+                                required> </div>
+
+                                <div class="form-group col-md-6">
+                                <label for="InputEmail1" class="mb-0">Email Address</label>
+                                <input type="email" name="email" class="form-control" id="InputEmail1" placeholder="Enter Email" required> </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="InputLastname" class="mb-0">password</label>
+                                <input  minlength = "4"
+                                        type="password" 
+                                        name="password"  
+                                        class="form-control" 
+                                        id="InputLastname" 
+                                        placeholder="new password" 
+                                        required> </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="InputPassword1" class="mb-0">Password</label>
+                                <input type="password" 
+                                minlength = "4"
+                                name="password2" 
+                                autocomplete="new-password"
+                                required
+                                class="form-control" id="InputPassword1" placeholder="Write password again" required> </div>
+
+                        </div>
+                        <button type="submit"  name="signup" class="btn hvr-hover">Register</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- ********************************************************************* -->
+
             <div class="the-errors text-center">
                 <?php 
                     if(!empty($formErrors)){
 
                         foreach($formErrors as $error){
-                            echo '<div class=msg error>'.$error .'</div>';
+                            echo '<div class="alert alert-danger">'.$error .'</div>';
                         }
                     }
 
                     if(isset($successMsg)){
-                        echo '<div class="msg success">'.$successMsg.'</div>';
+                        echo '<div class="alert alert-success">'.$successMsg.'</div>';
                     }
 
                 ?>
