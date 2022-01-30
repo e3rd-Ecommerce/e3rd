@@ -11,7 +11,7 @@ session_start();
 
 $pageTitle = 'Categories';
 
-if(isset($_SESSION['Username'])){
+if(isset($_SESSION['ID'])){
 
     include 'init.php';
 
@@ -35,9 +35,9 @@ if(isset($_SESSION['Username'])){
 
             if(!empty($cats)){ 
              ?>
-            <h1 class="text-center">Manage Categories</h1>
-            <div class="container categories">
-                        <a href="categories.php?do=Add" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> New Category</a>
+            <h2 class="text-center">Manage Categories</h2>
+            <div class=" categories">
+                        <a href="categories.php?do=Add" class="btn btn-primary mb-2 btn-sm custom-Add-btn"><i class="fa fa-plus"></i> New Category</a>
                         <div class="card" >
                             <div class="card-header">
                                 <i class="fas fa-tools"></i> Manage Categories
@@ -56,8 +56,8 @@ if(isset($_SESSION['Username'])){
                                     foreach($cats as $cat){
                                         echo "<div class='cat'>";
                                             echo "<div class='hidden-buttons'>";
-                                                echo "<a href='categories.php?do=Edit&catid=".$cat['ID']."' class='btn btn-xs btn-primary'><i class='fa fa-edit'></i> Edit</a>";
-                                                echo "<a href='categories.php?do=Delete&catid=".$cat['ID']. "' class='confirm btn btn-xs btn-danger'><i class='fa fa-close'></i> Delete</a>";
+                                                echo "<a href='categories.php?do=Edit&catid=".$cat['ID']."' class='btn btn-xs btn-info edit'><i class='fa fa-edit'></i> Edit</a>";
+                                                echo "<a href='categories.php?do=Delete&catid=".$cat['ID']. "' class='confirm btn btn-xs btn-danger delete'><i class='fa fa-close'></i> Delete</a>";
                                             echo "</div>";
                                             echo "<h3>".$cat['name'] . "</h3>";
                                             echo "<div class='full-view'>";
@@ -72,7 +72,7 @@ if(isset($_SESSION['Username'])){
                                             //Get Sub categories for every category
                                             $childCats = getAllFrom("*", "categories" ,"WHERE parent = {$cat['ID']}", "", "ID", "ASC");
                                             if(!empty($childCats)){
-                                                echo "<h4 class='child-head'>Sub Categories</h4>";
+                                                echo "<h4 class='child-head'>Sub Categories :</h4>";
                                                 echo "<ul class='list-unstyled child-cats'>";
                                                     foreach($childCats as $subCat){
                                                         echo "<li class='child-link'>
@@ -91,6 +91,7 @@ if(isset($_SESSION['Username'])){
             </div>
     <?php   } else {
                 $theMsg='<div class="nice-message">Theres No Categories To show here</div>';
+                echo '<div class="seperator"></div>';
                 echo '<div class="container mt-3 text-center">';
                     echo $theMsg;
                     echo '<a href="categories.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Category</a>';
@@ -101,9 +102,9 @@ if(isset($_SESSION['Username'])){
 
         <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 m-auto">
+                        <div class="col-lg-6 m-auto custom-form-header">
                             <div class="card bg-light mt-3">
-                                <div class="card-titel bg-info text-white">
+                                <div class="card-titel text-white">
                                     <h3 class="text-center py-4">Add New Category</h3>
                                 </div>
 
@@ -156,7 +157,7 @@ if(isset($_SESSION['Username'])){
                                             <input type="radio" name="ads" value="1" />
                                             <label for="">Don't Allow Ads</label>
                                         </div>
-                                        <button class="btn btn-success" >Add Category</button>
+                                        <button class="btn btn-outline-primary" >Add Category</button>
                                     </form>
                                 </div>
                             </div>
@@ -187,6 +188,7 @@ if(isset($_SESSION['Username'])){
 
                 if($check == 1){
                     $theMsg="<div class='alert alert-danger'>Sorry This Category Is Exist</div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back');
                         echo '</div>';
@@ -209,6 +211,7 @@ if(isset($_SESSION['Username'])){
 
                         //echo Success Message
                     $theMsg="<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Inserted </div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,null,'categories');
                         echo '</div>';
@@ -246,9 +249,9 @@ if(isset($_SESSION['Username'])){
             
             <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 m-auto">
+                        <div class="col-lg-6 m-auto custom-form-header">
                             <div class="card bg-light mt-3">
-                                <div class="card-titel bg-info text-white">
+                                <div class="card-titel text-white">
                                     <h3 class="text-center py-4">Edit Category</h3>
                                 </div>
 
@@ -304,7 +307,7 @@ if(isset($_SESSION['Username'])){
                                             <input type="radio" name="ads" value="1" <?php if($cat['allow_ads'] == 1){echo 'checked';} ?>  />
                                             <label for="">Don't Allow Ads</label>
                                         </div>
-                                        <button class="btn btn-success" >Save updates</button>
+                                        <button class="btn btn-outline-primary" >Save updates</button>
                                     </form>
                                 </div>
                             </div>
@@ -318,6 +321,7 @@ if(isset($_SESSION['Username'])){
         } else {
 
             $theMsg='<div class="alert alert-danger">Theres No Such ID</div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -365,7 +369,8 @@ if(isset($_SESSION['Username'])){
                     $stmt->execute(array($name,$desc,$parent,$order,$visible,$comment,$ads,$id));
 
                     //echo Success Message
-                    $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
+                    $theMsg= "<div class='alert alert-success'> Successfully Updated </div>";
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,null,'categories',4);
                     echo '</div>';
@@ -373,6 +378,7 @@ if(isset($_SESSION['Username'])){
 
             } else {
                     $theMsg= "<div class='alert alert-danger'>Sorry You Cant Browse This Page Directly </div>";
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,4);
                     echo '</div>';
@@ -401,12 +407,14 @@ if(isset($_SESSION['Username'])){
 
                     //echo Success Message
                      $theMsg = "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Deleted </div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
                     $theMsg= "<div class='alert alert-danger'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';

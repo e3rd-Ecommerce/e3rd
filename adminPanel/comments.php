@@ -13,7 +13,7 @@
 
     $pageTitle = "comments" ;
 
-    if(isset($_SESSION['Username'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
+    if(isset($_SESSION['ID'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
         
         include 'init.php';
 
@@ -52,7 +52,7 @@
         
             ?>
 
-            <h1 class="text-center">Manage Comments</h1>
+            <h2 class="text-center">Manage Comments</h2>
             <div class="container"> 
                 <div class="table-responsive">
                     <table class="main-table text-center table table-bordered">
@@ -74,8 +74,8 @@
                                     echo "<td>". $row['member_name'] . "</td>";
                                     echo "<td>".$row['comment_date']."</td>";
                                     echo "<td>
-                                            <a href='comments.php?do=Edit&comid=". $row['c_ID'] ."' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                            <a href='comments.php?do=Delete&comid=$row[c_ID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+                                            <a href='comments.php?do=Edit&comid=". $row['c_ID'] ."' class='btn btn-info edit'><i class='fa fa-edit'></i> Edit</a>
+                                            <a href='comments.php?do=Delete&comid=$row[c_ID]' class='btn btn-danger delete confirm'><i class='fa fa-close'></i> Delete </a>";
                                             if ($row['status'] == 0){
                                                echo "<a href='?do=Approve&comid=" . $row['c_ID'] ."' class='btn btn-info activate'><i class='fas fa-check'></i> Approve</a>";
                                             }         
@@ -90,6 +90,7 @@
     <?php }else {
 
                 $theMsg='<div class="nice-message">Theres No Comments To show here</div>';
+                echo '<div class="seperator"></div>';
                 echo '<div class="container mt-3 text-center">';
                     echo $theMsg;
                 echo '</div>';
@@ -117,9 +118,9 @@
                 
                 <div class="container">
                         <div class="row">
-                            <div class="col-lg-6 m-auto">
+                            <div class="col-lg-6 m-auto custom-form-header">
                                 <div class="card bg-light mt-5">
-                                    <div class="card-titel bg-primary text-white">
+                                    <div class="card-titel text-white">
                                         <h3 class="text-center py-4">Edit Comment</h3>
                                     </div>
 
@@ -127,7 +128,7 @@
                                         <form action="?do=Update" method="POST">
                                             <input type="hidden" name="comid" value="<?php echo $comid;?>">
                                             <textarea class="form-control mb-2" name="comment" required="required"><?php echo $row['comment'];?></textarea>
-                                            <button class="btn btn-success" >Save Changes</button>
+                                            <button class="btn btn-outline-primary" >Save Changes</button>
                                         </form>
                                     </div>
                                 </div>
@@ -140,6 +141,7 @@
         } else {
 
            $theMsg='<div class="alert alert-danger">Theres No Such ID</div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -161,12 +163,14 @@
 
                     //echo Success Message
                     $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,'back',4);
                     echo '</div>';
 
                 } else {
                         $theMsg= "<div class='alert alert-danger'>Sorry You Cant Browse This Page Directly </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -195,12 +199,14 @@
 
                     //echo Success Message
                      $theMsg = "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Deleted </div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
-                    $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,null,'comments',4);
                         echo '</div>';
@@ -228,13 +234,16 @@
                     $stmt->execute();
 
                     //echo Success Message
-                     $theMsg = "<div class='alert alert-success'> Comment Approved <i class='fas fa-check-circle'></i></div>";
+
+                        $theMsg = "<div class='alert alert-success'> Comment Approved <i class='fas fa-check-circle'></i></div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
-                    $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -277,7 +286,7 @@
 
                     ?>
 
-                    <h1 class="text-center">Manage Comment</h1>
+                    <h2 class="text-center">Manage Comment</h2>
                     <div class="container"> 
                         <div class="table-responsive">
                             <table class="main-table text-center table table-bordered">
@@ -299,8 +308,8 @@
                                         echo "<td>". $row['member_name'] . "</td>";
                                         echo "<td>".$row['comment_date']."</td>";
                                         echo "<td>
-                                                <a href='comments.php?do=Edit&comid=". $row['c_ID'] ."' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                                <a href='comments.php?do=Delete&comid=$row[c_ID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+                                                <a href='comments.php?do=Edit&comid=". $row['c_ID'] ."' class='btn btn-info edit'><i class='fa fa-edit'></i> Edit</a>
+                                                <a href='comments.php?do=Delete&comid=$row[c_ID]' class='btn btn-danger delete'><i class='fa fa-close'></i> Delete </a>";
                                                 if ($row['status'] == 0){
                                                 echo "<a href='?do=Approve&comid=" . $row['c_ID'] ."' class='btn btn-info activate'><i class='fas fa-check'></i> Approve</a>";
                                                 }         
@@ -313,8 +322,8 @@
                         </div>
                     </div>
     <?php  } else{
-
                  $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                 echo '<div class="seperator"></div>';
                  echo '<div class="container mt-3 text-center">';
                      redirectHome($theMsg,4);
                  echo '</div>';

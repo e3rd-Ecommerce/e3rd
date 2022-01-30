@@ -11,7 +11,7 @@ session_start();
 
 $pageTitle = 'Items';
 
-if(isset($_SESSION['Username'])){
+if(isset($_SESSION['ID'])){
 
     include 'init.php';
 
@@ -45,8 +45,9 @@ if(isset($_SESSION['Username'])){
             if(!empty($items)){
         ?>
 
-            <h1 class="text-center">Manage Items</h1>
+            <h2 class="text-center">Manage Items</h2>
             <div class="container"> 
+            <a href="items.php?do=Add" class="btn btn-primary  custom-Add-btn btn-sm mb-2"><i class="fa fa-plus"></i> Add Item</a>
                 <div class="table-responsive">
                     <table class="main-table text-center table table-bordered">
                         <tr> 
@@ -65,7 +66,8 @@ if(isset($_SESSION['Username'])){
                             foreach($items as $item){
                                 $dirname = "../imageItems/".$item['image'];
                                 if (is_dir($dirname)) {
-                                    $images = glob($dirname ."/*");
+                                    //$image ='';
+                                    $images = glob($dirname."/*");
                                 }
                                 echo "<tr>";
                                     echo "<td>". $item['item_ID'] . "</td>";
@@ -77,8 +79,8 @@ if(isset($_SESSION['Username'])){
                                     echo "<td>".$item['category_name']."</td>";
                                     echo "<td>".$item['Username']."</td>";
                                     echo "<td>
-                                            <a href='items.php?do=Edit&itemid=$item[item_ID]' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                            <a href='items.php?do=Delete&itemid=$item[item_ID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";  
+                                            <a href='items.php?do=Edit&itemid=$item[item_ID]' class='btn btn-info edit'><i class='fa fa-edit'></i> Edit</a>
+                                            <a href='items.php?do=Delete&itemid=$item[item_ID]' class='btn btn-danger delete confirm'><i class='fa fa-close'></i> Delete </a>";  
                                             if ($item['approve'] == 0){
                                                 echo "<a href='?do=Approve&itemid=$item[item_ID]' class='btn btn-info activate'><i class='fas fa-check'></i> Approve</a>";
                                              }            
@@ -89,11 +91,11 @@ if(isset($_SESSION['Username'])){
                         
                     </table>
                 </div>
-                <a href="items.php?do=Add" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Item</a>
             </div> 
 
 <?php       } else{ 
                 $theMsg='<div class="nice-message">Theres No items To show here</div>';
+                echo '<div class="seperator"></div>';
                 echo '<div class="container mt-3 text-center">';
                     echo $theMsg;
                     echo '<a href="items.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New item</a>';
@@ -103,9 +105,9 @@ if(isset($_SESSION['Username'])){
 
             <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 m-auto">
+                        <div class="col-lg-6 m-auto custom-form-header">
                             <div class="card bg-light mt-3">
-                                <div class="card-titel bg-info text-white">
+                                <div class="card-titel text-white">
                                     <h3 class="text-center py-4">Add New Item</h3>
                                 </div>
 
@@ -311,6 +313,7 @@ if(isset($_SESSION['Username'])){
 
                             //echo Success Message
                             $theMsg="<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Inserted </div>';
+                            echo '<div class="seperator"></div>';
                             echo '<div class="container mt-3 text-center">';
                                 redirectHome($theMsg,'back');
                             echo '</div>';
@@ -319,6 +322,7 @@ if(isset($_SESSION['Username'])){
             } else {
 
                 $theMsg = "<div class='alert alert-danger'>You cant Browse This Page Directly</div>" ;
+                echo '<div class="seperator"></div>';
                 echo '<div class="container mt-3 text-center">';
                     redirectHome($theMsg,4);
                 echo '</div>';
@@ -347,9 +351,9 @@ if(isset($_SESSION['Username'])){
             
             <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 m-auto">
+                        <div class="col-lg-6 m-auto custom-form-header">
                             <div class="card bg-light mt-3">
-                                <div class="card-titel bg-info text-white">
+                                <div class="card-titel text-white">
                                     <h3 class="text-center py-4">Edit Item</h3>
                                 </div>
 
@@ -368,8 +372,9 @@ if(isset($_SESSION['Username'])){
                                             for ($i=0; $i<count($images); $i++)
                                             { 
                                                 $image = $images[$i];  ?>
-                                                <img src="<?=$image?>" alt="not found" style="width:30%"
-                                                onmouseover="bigImg(this)" onmouseout="normalImg(this)" onclick="deleteimage('<?=$image?>')">
+                                                <div class="image-for-edit" onclick="deleteimage('<?=$image?>')">
+                                                    <img src="<?=$image?>" alt="not found" >
+                                                </div>
                                             <?php }
                                         }
                                     ?>
@@ -456,7 +461,6 @@ if(isset($_SESSION['Username'])){
                                                             echo '</optgroup>';
                                                          }
                                                     }
-
                                                       
                                                 ?>
                                             </select>
@@ -539,6 +543,7 @@ if(isset($_SESSION['Username'])){
     } else {
 
        $theMsg='<div class="alert alert-danger">Theres No Such ID</div>';
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,4);
                     echo '</div>';
@@ -637,6 +642,7 @@ if(isset($_SESSION['Username'])){
 
                     //echo Success Message
                     $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,null,'items',4);
                     echo '</div>';
@@ -644,6 +650,7 @@ if(isset($_SESSION['Username'])){
 
             } else {
                     $theMsg= "<div class='alert alert-danger'>Sorry You Cant Browse This Page Directly </div>";
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,4);
                     echo '</div>';
@@ -702,12 +709,14 @@ if(isset($_SESSION['Username'])){
 
                 //echo Success Message
                  $theMsg = "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Deleted </div>';
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,'back',4);
                     echo '</div>';
 
             }else {
                 $theMsg= "<div class='alert alert-danger'> This Id Is Not Exist </div>";
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,4);
                     echo '</div>';
@@ -737,12 +746,14 @@ if(isset($_SESSION['Username'])){
 
                     //echo Success Message
                      $theMsg = "<div class='alert alert-success'> Item Approved <i class='fas fa-check-circle'></i></div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
                     $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';

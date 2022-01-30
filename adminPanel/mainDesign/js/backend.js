@@ -1,3 +1,11 @@
+//Admid Dashboard 'Navbar bttton'
+let sidebar = document.querySelector(".sidebar");
+let sidebarBtn = document.querySelector(".sidebarBtn");
+
+sidebarBtn.onclick = function(){
+    sidebar.classList.toggle("active");
+}
+
 $(function (){
 
     'use strict';
@@ -24,7 +32,7 @@ $(function (){
     });
 
 
-    //Hide Plasce Holder on Form Focus
+    //Hide Placeholder on Form Focus
     $('[placeholder]').focus(function(){
 
         $(this).attr('data-text', $(this).attr('placeholder'));
@@ -83,18 +91,7 @@ $(function (){
 
 });
 
-
-
-
-function bigImg(x) {
-    x.style.height = "34%";
-    x.style.width = "34%";
-}
-
-function normalImg(x) {
-    x.style.height = "30%";
-    x.style.width = "30%";
-}
+$("nice-message").before("<p><b>Hello javatpoint.com</b></p>");  
 
 function deleteimage(x) {
     let text = "Are you Sure To Delete This Image !\n      Either OK or Cancel.";
@@ -117,3 +114,4 @@ function deleteimage(x) {
         alert("You canceled!");
     }
 }
+

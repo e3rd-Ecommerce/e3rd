@@ -13,7 +13,7 @@
 
     $pageTitle = "Members" ;
 
-    if(isset($_SESSION['Username'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
+    if(isset($_SESSION['ID'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
         
         include 'init.php';
 
@@ -41,8 +41,9 @@
 
                 ?>
 
-                <h1 class="text-center">Manage Members</h1>
+                <h2 class="text-center">Manage Members</h2>
                 <div class="container"> 
+                <a href="members.php?do=Add" class="btn btn-primary custom-Add-btn btn-sm my-2"><i class="fa fa-plus"></i> New Member</a>
                     <div class="table-responsive">
                         <table class="main-table text-center table table-bordered manage-members">
                             <tr> 
@@ -68,8 +69,8 @@
                                         echo "<td>". $row['FullName'] . "</td>";
                                         echo "<td>".$row['regDate']."</td>";
                                         echo "<td>
-                                                <a href='?do=Edit&userid=$row[userID]' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                                <a href='?do=Delete&userid=$row[userID]' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+                                                <a href='?do=Edit&userid=$row[userID]' class='btn btn-info edit'><i class='fa fa-edit'></i> Edit</a>
+                                                <a href='?do=Delete&userid=$row[userID]' class='btn btn-danger delete confirm'><i class='fa fa-close'></i> Delete </a>";
                                                 if ($row['RegStatus'] == 0){
                                                 echo "<a href='?do=Activate&userid=$row[userID]' class='btn btn-info activate'><i class='fas fa-check'></i> Activate</a>";
                                                 }         
@@ -80,11 +81,10 @@
                             
                         </table>
                     </div>
-                    <a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>
                 </div>
         <?php }else {
-
                 $theMsg='<div class="nice-message">Theres No Members To show here</div>';
+                echo '<div class="seperator"></div>';
                 echo '<div class="container mt-3 text-center">';
                     echo $theMsg;
                     echo '<a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>';
@@ -95,9 +95,9 @@
             
             <div class="container">
                         <div class="row">
-                            <div class="col-lg-6 m-auto">
+                            <div class="col-lg-6 m-auto custom-form-header">
                                 <div class="card bg-light mt-5">
-                                    <div class="card-titel bg-primary text-white">
+                                    <div class="card-titel text-white">
                                         <h3 class="text-center py-4">Add New Member</h3>
                                     </div>
 
@@ -119,7 +119,7 @@
                                             <!--End User Profile Picture-->
                                             
                                             <div class="d-grid col-12">
-                                                <button class="btn btn-success" type="submit">Add Member</button>
+                                                <button class="btn btn-outline-primary" type="submit">Add Member</button>
                                             </div>
                                         </form>
                                     </div>
@@ -221,6 +221,7 @@
                         $check = checkItem("UserName", "users", $user);
                         if($check == 1){
                             $theMsg="<div class='alert alert-danger'>Sorry This User Is Exist</div>";
+                                echo '<div class="seperator"></div>';
                                 echo '<div class="container mt-3 text-center">';
                                     redirectHome($theMsg,'back');
                                 echo '</div>';
@@ -241,15 +242,18 @@
 
                                 //echo Success Message
                                $theMsg="<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Inserted </div>';
-                                echo '<div class="container mt-3 text-center">';
+                                
+                               echo '<div class="seperator"></div>';
+                               echo '<div class="container mt-3 text-center">';
                                     redirectHome($theMsg,null,'members');
-                                echo '</div>';
+                               echo '</div>';
                         }
                     }
 
                 } else {
 
                     $theMsg = "<div class='alert alert-danger'>You cant Browse This Page Directly</div>" ;
+                    echo '<div class="seperator"></div>';
                     echo '<div class="container mt-3 text-center">';
                         redirectHome($theMsg,4);
                     echo '</div>';
@@ -279,9 +283,9 @@
                 
                 <div class="container">
                         <div class="row">
-                            <div class="col-lg-6 m-auto">
+                            <div class="col-lg-6 m-auto custom-form-header">
                                 <div class="card bg-light mt-5">
-                                    <div class="card-titel bg-primary text-white">
+                                    <div class="card-titel text-white">
                                         <h3 class="text-center py-4">Edit Member</h3>
                                     </div>
 
@@ -301,7 +305,7 @@
                                             
                                             <div class="custom-container">
                                                 <div class="button-wrap">
-                                                    <label class="button mb-3" for="upload">Upload File</label>
+                                                    <label class="button mb-3" for="upload">Upload Your Image</label>
                                                     <input id="upload" type="file" name="avatar">
                                                 </div>
                                             </div>
@@ -314,7 +318,7 @@
                                             <input type="password" name="newpassword" class="form-control my-2" autocomplete="new-password" placeholder="Leave it Blanck If You Dont Want To cahnge">
                                             <input type="email" name="email" placeholder="Email" class="form-control my-2" value="<?php echo $row['Email'] ?>" autocomplete="new-password" required="required">
                                             <input type="text" name="full" placeholder="Full Name" value="<?php echo $row['FullName'] ?>" class="form-control my-2" required="required">
-                                            <button class="btn btn-success" >Save Changes</button>
+                                            <button class="btn btn-outline-primary" >Save Changes</button>
                                         </form>
                                     </div>
                                 </div>
@@ -326,7 +330,8 @@
         //If there is no Such Id
         } else {
 
-           $theMsg='<div class="alert alert-danger">Theres No Such ID</div>';
+                     $theMsg='<div class="alert alert-danger">Theres No Such ID</div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -349,7 +354,6 @@
                     if (!empty($_FILES['avatar']['name'])) {
                         $avatar = $_FILES['avatar'] ?? null;
                         if ($avatar) {
-                            $avatarName = $avatar['name'];
                             $avatarName     = $avatar['name']; //File name with extension
                             $avatarSize     = $avatar['size']; //File Size in KiloByte
                             $avatarTmpName  = $avatar['tmp_name']; //is the temporary name of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
@@ -378,8 +382,8 @@
                         $formErrors[] = "Username cant Be Less Than<strong> 4 Characters</strong>";
                     }
 
-                    if(strlen($user) > 20){
-                        $formErrors[] = "Username cant Be More Than <strong>20 Characters</strong>";
+                    if(strlen($user) > 10){
+                        $formErrors[] = "Username cant Be More Than <strong>10 Characters</strong>";
                     }
 
                     if(empty($user)){
@@ -416,6 +420,7 @@
                             
                             //echo Success Message
                             $theMsg= "<div class='alert alert-danger'>Sorry This Username Is Exist </div>";
+                            echo '<div class="seperator"></div>';
                             echo '<div class="container mt-3 text-center">';
                                 redirectHome($theMsg,'back',4);
                             echo '</div>';
@@ -436,6 +441,7 @@
 
                             //echo Success Message
                             $theMsg= "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Updated </div>';
+                            echo '<div class="seperator"></div>';
                             echo '<div class="container mt-3 text-center">';
                                 redirectHome($theMsg,'back',4);
                             echo '</div>';
@@ -446,6 +452,7 @@
 
                 } else {
                         $theMsg= "<div class='alert alert-danger'>Sorry You Cant Browse This Page Directly </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';
@@ -474,12 +481,14 @@
 
                     //echo Success Message
                      $theMsg = "<div class='alert alert-success'>".$stmt->rowCount() ." ". 'Record Deleted </div>';
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
                     $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
@@ -508,12 +517,14 @@
 
                     //echo Success Message
                      $theMsg = "<div class='alert alert-success'> Member Approved <i class='fas fa-check-circle'></i></div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,'back',4);
                         echo '</div>';
 
                 }else {
                     $theMsg= "<div class='alert alert-success'> This Id Is Not Exist </div>";
+                        echo '<div class="seperator"></div>';
                         echo '<div class="container mt-3 text-center">';
                             redirectHome($theMsg,4);
                         echo '</div>';

@@ -1,10 +1,10 @@
 <?php 
 
     session_start();
-    $noNavbar = '';
+    $noNavBar = 'set';
     $pageTitle = 'Login';
     
-    if(isset($_SESSION['Username'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
+    if(isset($_SESSION['ID'])){ //هون بشيك اذا فيه سشين موجوده ولا لأ
         header('location: dashboard.php');
     }
     
